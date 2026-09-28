@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+**/__pycache__/
+*.pyc
+.pytest_cache/
+.git/
+.env
+severance.db
+*.db
+.DS_Store
+ui-react/node_modules/
+ui-react/src/
+network_violations.log
+tests/
+sandbox/Dockerfile

@@ -1,0 +1,137 @@
+# SEVERANCE container deployment.
+#
+#   host :8080 ──► gateway ──(severance_internal, no route out)──► api ──► ollama
+#                                                                   │
+#                                             unix socket (volume)  ▼
+#                                                                 sandbox (no network)
+#
+# Start:  docker compose up -d --build     Open: http://localhost:8080
+
+x-hardening: &hardening
+  security_opt:
+    - no-new-privileges:true
+  restart: unless-stopped
+
+services:
+  # Local LLM backend. Only reachable from `api` over the internal network.
+  ollama:
+    <<: *hardening
+    image: ollama/ollama:latest
+    environment:
+      OLLAMA_NOPRUNE: "1"
+      OLLAMA_MAX_LOADED_MODELS: "1"
+      OLLAMA_KEEP_ALIVE: "30m"
+    volumes:
+      # Reuse the models already pulled on the host instead of downloading
+      # them again (this network has no internet access, so it couldn't).
+      # Read-only: the container can load models but never alter them.
+      - ${OLLAMA_MODELS_DIR:-${USERPROFILE:-~}/.ollama/models}:/root/.ollama/models:ro
+    networks:
+      - severance_internal
+    # No `ports:` mapping on purpose -- nothing outside this project can reach it.
+
+  # Code execution sandbox for model-proposed scripts.
+  sandbox:
+    <<: *hardening
+    build: ./sandbox
+    image: severance-sandbox
+    network_mode: none          # no network interface at all
+    read_only: true
+    cap_drop: [ALL]
+    user: "10001:10001"
+    pids_limit: 64              # fork bombs stop here
+    mem_limit: 512m
+    memswap_limit: 512m
+    cpus: 1.0
+    init: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777,nosuid,nodev
+    environment:
+      SANDBOX_SOCKET: /run/sandbox/sandbox.sock
+    volumes:
+      # The ONLY thing shared with the rest of the system: a socket directory.
+      - sandbox_socket:/run/sandbox
+
+  # SEVERANCE API + UI. On the internal network only: it has no route out.
+  api:
+    <<: *hardening
+    build: .
+    image: severance-api
+    depends_on:
+      ollama:
+        condition: service_started
+      sandbox:
+        condition: service_healthy
+    env_file: .env
+    environment:
+      # Container-specific overrides of .env (which targets a host run).
+      OLLAMA_API_BASE: "http://ollama:11434"
+      SEVERANCE_DB_PATH: "/data/severance.db"
+      SANDBOX_SOCKET: "/run/sandbox/sandbox.sock"
+    volumes:
+      - severance_data:/data
+      - ./corpus:/app/corpus:ro
+      - sandbox_socket:/run/sandbox
+    networks:
+      - severance_internal
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://127.0.0.1:8080/login', timeout=3)"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  # The only service with a published port. An `internal: true` network
+  # cannot publish ports, so this proxy bridges host :8080 to `api` while
+  # `api`, `ollama` and `sandbox` stay without any route to the internet.
+  gateway:
+    <<: *hardening
+    image: nginx:1.27-alpine
+    depends_on:
+      api:
+        condition: service_healthy
+    read_only: true
+    tmpfs:
+      - /var/cache/nginx
+      - /var/run
+    volumes:
+      - ./ops/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "127.0.0.1:${SEVERANCE_PORT:-8080}:80"   # localhost only
+    networks:
+      - edge
+      - severance_internal
+
+  # Sidecar that continuously watches for any outbound connection from the
+  # `api` container's network namespace to a non-private address, and
+  # writes violations to a shared log file the demo can tail live.
+  #
+  # This is the visible companion to the structural guarantee below
+  # (`severance_internal` has no route out) -- the network topology alone
+  # already makes egress impossible; this container makes that fact legible
+  # during a demo instead of asking the judges to trust an architecture
+  # diagram.
+  network-monitor:
+    image: severance-api
+    command: ["python", "ops/network_monitor.py", "--interval", "1"]
+    network_mode: "service:api"   # shares api's network namespace, so it sees exactly what api sees
+    depends_on:
+      - api
+    restart: unless-stopped
+
+networks:
+  # internal: true is the actual sovereignty guarantee -- Docker gives this
+  # network NO default route to the host's external interface, so even a
+  # compromised or misconfigured container on it cannot reach the internet
+  # no matter what code runs inside it. This is enforced by the container
+  # runtime, not by application-level policy.
+  severance_internal:
+    driver: bridge
+    internal: true
+  # Only the gateway joins this one, so the host can reach port 8080.
+  edge:
+    driver: bridge
+
+volumes:
+  severance_data:
+  sandbox_socket:

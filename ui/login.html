@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>SEVERANCE — Secure Authentication</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<style>@layer base { html, body { margin: 0; padding: 0; } } ::-webkit-scrollbar { display: none; }</style>
+<script src="https://cdn.tailwindcss.com"></script>
+<script id="tailwind-config">
+tailwind.config = { theme: { extend: {
+  "colors": { "secondary": "#436086", "clearance-internal": "#456E82", "clearance-confidential": "#B07D38", "surface-canvas": "#FAF9F5", "text-tertiary": "#8F8D86", "primary": "#a03a23", "primary-container": "#c15238", "on-primary": "#ffffff", "surface-raised": "#FFFFFF", "compartment-hse": "#4D7358", "surface-subtle": "#F3F1EC", "border-subtle": "#E6E4DC", "surface": "#fcf9f5", "text-primary": "#20201E", "text-secondary": "#666560", "error": "#ba1a1a", "inverse-surface": "#31302e", "inverse-on-surface": "#f3f0ed" },
+  "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+  "spacing": { "space-xl": "2.5rem", "space-md": "1rem", "space-sm": "0.5rem", "space-xs": "0.25rem", "margin-mobile": "1rem", "space-lg": "1.5rem" },
+  "fontFamily": { "headline-md": ["Newsreader"], "label-md": ["JetBrains Mono"], "label-sm": ["JetBrains Mono"], "body-sm": ["Inter"], "title-sm": ["Inter"] },
+  "fontSize": {
+    "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+    "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.03em", "fontWeight": "500" }],
+    "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "500" }],
+    "body-sm": ["13px", { "lineHeight": "20px", "fontWeight": "400" }],
+    "title-sm": ["14px", { "lineHeight": "20px", "fontWeight": "600" }]
+  }
+} } };
+</script>
+</head>
+<body class="bg-surface font-body-sm text-body-sm text-text-primary min-h-screen">
+<main class="w-full bg-surface min-h-screen flex items-center justify-center p-space-md">
+<div class="flex flex-col w-full items-center justify-center py-space-xl px-margin-mobile min-h-[calc(100vh-4rem)]">
+<div class="relative w-full max-w-[460px] flex flex-col items-center">
+<div class="absolute -top-16 -left-16 w-80 h-80 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute -bottom-16 -right-16 w-80 h-80 bg-secondary/5 rounded-full blur-3xl pointer-events-none"></div>
+
+<div class="flex items-center gap-space-xs mb-space-lg">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+<span class="font-label-sm text-label-sm text-text-tertiary tracking-widest uppercase">MRPL Sovereign Air-Gapped Trust Workbench</span>
+</div>
+
+<div class="w-full bg-surface-raised rounded-xl shadow-xl shadow-text-primary/5 relative overflow-hidden transition-all duration-300">
+<div class="h-1 w-full bg-surface-subtle">
+<div class="h-full bg-primary transition-all duration-500" id="progressIndicator" style="width: 50%;"></div>
+</div>
+<div class="p-space-xl flex flex-col">
+
+<div class="flex flex-col items-center text-center mb-space-lg">
+<div class="w-14 h-14 rounded-lg bg-surface-subtle flex items-center justify-center mb-space-sm shadow-sm">
+<span class="material-symbols-outlined text-primary text-[28px]">shield_lock</span>
+</div>
+<h1 class="font-headline-md text-headline-md text-text-primary tracking-tight">SEVERANCE</h1>
+<p class="font-label-sm text-label-sm text-text-secondary tracking-wider uppercase mt-1">MRPL Refining Enterprise Enclave</p>
+</div>
+
+<div class="flex p-1 bg-surface-subtle rounded-lg mb-space-lg">
+<button class="flex-1 py-1.5 px-3 rounded-md font-label-sm text-label-sm font-medium transition-all text-text-primary bg-surface-raised shadow-sm" id="tabStateA" type="button">Session Auth</button>
+<button class="flex-1 py-1.5 px-3 rounded-md font-label-sm text-label-sm font-medium transition-all text-text-secondary cursor-not-allowed opacity-60" id="tabStateB" type="button" disabled>Key Rotation</button>
+</div>
+
+<div id="errorBox" class="hidden p-3 bg-error/10 text-error rounded-lg mb-space-md font-body-sm text-body-sm"></div>
+
+<!-- STATE A: LOGIN -->
+<form class="flex flex-col space-y-space-md" id="loginForm">
+<div class="space-y-space-xs">
+<label class="block font-label-sm text-label-sm text-text-secondary uppercase tracking-wider">Employee Designation ID</label>
+<div class="relative">
+<input autocomplete="username" class="w-full bg-surface-subtle text-text-primary placeholder:text-text-tertiary font-body-sm text-body-sm rounded-lg px-3 py-2.5 outline-none focus:bg-surface-canvas transition-colors" id="personId" placeholder="e.g. admin-001, cvo-001" required type="text">
+<div class="absolute right-3 top-2.5 text-text-tertiary flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-[18px]">badge</span>
+</div>
+</div>
+</div>
+<div class="space-y-space-xs">
+<label class="font-label-sm text-label-sm text-text-secondary uppercase tracking-wider">Password</label>
+<div class="relative">
+<input autocomplete="current-password" class="w-full bg-surface-subtle text-text-primary placeholder:text-text-tertiary font-label-md text-label-md rounded-lg px-3 py-2.5 outline-none focus:bg-surface-canvas transition-colors" id="password" placeholder="••••••••••••" required type="password">
+<button class="absolute right-3 top-2.5 text-text-tertiary hover:text-text-primary transition-colors" onclick="togglePassVisibility('password')" type="button">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</div>
+</div>
+<button class="w-full bg-primary hover:bg-primary-container text-on-primary py-2.5 rounded-lg font-title-sm text-title-sm shadow-sm transition-colors flex items-center justify-center gap-2 mt-2" id="loginBtn" type="submit">
+<span>Authenticate Session</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+<div class="p-3 bg-surface-subtle rounded-lg mt-2">
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[16px] text-text-tertiary shrink-0 mt-0.5">policy</span>
+<p class="font-body-sm text-body-sm text-text-secondary leading-relaxed">
+Self-signup is prohibited. All enterprise access credentials are provisioned strictly by Refinery System Administrators.
+</p>
+</div>
+</div>
+</form>
+
+<!-- STATE B: FORCED FIRST-TIME PASSWORD CHANGE -->
+<form class="hidden flex-col space-y-space-md" id="changePasswordForm">
+<div class="p-3 bg-clearance-confidential/10 rounded-lg flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full font-label-sm text-label-sm bg-clearance-confidential/20 text-clearance-confidential uppercase font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-clearance-confidential"></span>
+First-Time Sign-In Detected
+</span>
+<span class="font-label-sm text-label-sm text-clearance-confidential">STAGE 2/2</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary mt-1">
+This account was provisioned with a temporary password. Set a permanent password to continue.
+</p>
+</div>
+<div class="space-y-space-xs">
+<div class="flex justify-between items-center">
+<label class="font-label-sm text-label-sm text-text-secondary uppercase tracking-wider">New Password</label>
+<span class="font-label-sm text-label-sm text-text-tertiary" id="strengthBadge">Minimum 8 characters</span>
+</div>
+<div class="relative">
+<input class="w-full bg-surface-subtle text-text-primary placeholder:text-text-tertiary font-label-md text-label-md rounded-lg px-3 py-2.5 outline-none focus:bg-surface-canvas transition-colors" id="newPassword" minlength="8" oninput="updatePassphraseStrength(this.value)" placeholder="Enter new password" required type="password">
+<button class="absolute right-3 top-2.5 text-text-tertiary hover:text-text-primary transition-colors" onclick="togglePassVisibility('newPassword')" type="button">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</div>
+<div class="w-full h-1 bg-surface-subtle rounded-full overflow-hidden mt-1" id="strengthBar">
+<div class="h-full bg-clearance-confidential w-0 transition-all duration-300"></div>
+</div>
+</div>
+<div class="space-y-space-xs">
+<label class="block font-label-sm text-label-sm text-text-secondary uppercase tracking-wider">Confirm New Password</label>
+<input class="w-full bg-surface-subtle text-text-primary placeholder:text-text-tertiary font-label-md text-label-md rounded-lg px-3 py-2.5 outline-none focus:bg-surface-canvas transition-colors" id="confirmPassword" minlength="8" placeholder="Re-enter to verify match" required type="password">
+</div>
+<button class="w-full bg-primary hover:bg-primary-container text-on-primary py-2.5 rounded-lg font-title-sm text-title-sm shadow-sm transition-colors flex items-center justify-center gap-2 mt-1" type="submit">
+<span class="material-symbols-outlined text-[18px]">key</span>
+<span>Set Password &amp; Continue</span>
+</button>
+</form>
+
+</div>
+<div class="bg-surface-subtle px-space-xl py-3 flex items-center justify-center font-label-sm text-label-sm text-text-tertiary">
+<span class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-compartment-hse"></span>
+MRPL RTI § 10 Passage Severability Engine
+</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<script src="/static/app.js"></script>
+<script>
+  let cachedOldPassword = "";
+
+  function togglePassVisibility(inputId) {
+    const input = document.getElementById(inputId);
+    input.type = input.type === "password" ? "text" : "password";
+  }
+
+  function updatePassphraseStrength(val) {
+    const bar = document.querySelector("#strengthBar > div");
+    const badge = document.getElementById("strengthBadge");
+    const ok = val.length >= 8;
+    bar.style.width = `${Math.min((val.length / 8) * 100, 100)}%`;
+    bar.className = `h-full transition-all duration-300 ${ok ? "bg-compartment-hse" : "bg-clearance-confidential"}`;
+    badge.textContent = ok ? "Meets minimum length" : "Minimum 8 characters";
+    badge.className = `font-label-sm text-label-sm ${ok ? "text-compartment-hse" : "text-text-tertiary"}`;
+  }
+
+  function showError(msg) {
+    const box = document.getElementById("errorBox");
+    box.textContent = msg;
+    box.classList.remove("hidden");
+  }
+  function hideError() {
+    document.getElementById("errorBox").classList.add("hidden");
+  }
+
+  function enterKeyRotationStage() {
+    document.getElementById("loginForm").classList.add("hidden");
+    document.getElementById("changePasswordForm").classList.remove("hidden");
+    document.getElementById("changePasswordForm").classList.add("flex");
+    document.getElementById("progressIndicator").style.width = "100%";
+    const tabA = document.getElementById("tabStateA");
+    const tabB = document.getElementById("tabStateB");
+    tabA.classList.remove("bg-surface-raised", "text-text-primary", "shadow-sm");
+    tabA.classList.add("text-text-secondary");
+    tabB.classList.add("bg-surface-raised", "text-text-primary", "shadow-sm");
+    tabB.classList.remove("text-text-secondary", "opacity-60");
+    tabB.disabled = false;
+  }
+
+  document.getElementById("loginForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    hideError();
+    const btn = document.getElementById("loginBtn");
+    const person_id = document.getElementById("personId").value.trim();
+    const password = document.getElementById("password").value;
+    cachedOldPassword = password;
+
+    btn.disabled = true;
+    try {
+      const res = await fetchAPI("/auth/login", {
+        method: "POST",
+        body: JSON.stringify({ person_id, password }),
+      });
+      if (!res.ok) {
+        const errData = await res.json();
+        showError(errData.detail || "Authentication failed.");
+        return;
+      }
+      const data = await res.json();
+      if (data.must_change_password) {
+        enterKeyRotationStage();
+      } else {
+        window.location.href = "/app";
+      }
+    } catch (err) {
+      showError(err.message || "Network error occurred.");
+    } finally {
+      btn.disabled = false;
+    }
+  });
+
+  document.getElementById("changePasswordForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    hideError();
+    const new_password = document.getElementById("newPassword").value;
+    const confirm_password = document.getElementById("confirmPassword").value;
+
+    if (new_password !== confirm_password) {
+      showError("Passwords do not match.");
+      return;
+    }
+    if (new_password.length < 8) {
+      showError("New password must be at least 8 characters.");
+      return;
+    }
+
+    try {
+      const res = await fetchAPI("/auth/change-password", {
+        method: "POST",
+        body: JSON.stringify({ old_password: cachedOldPassword, new_password }),
+      });
+      if (!res.ok) {
+        const errData = await res.json();
+        showError(errData.detail || "Failed to update password.");
+        return;
+      }
+      window.location.href = "/app";
+    } catch (err) {
+      showError(err.message || "Network error occurred.");
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>SEVERANCE — Document Trust Workbench</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<style>
+  @layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } }
+  ::-webkit-scrollbar { display: none; }
+  .markdown-body h1, .markdown-body h2, .markdown-body h3 { font-family: "Newsreader", serif; font-weight: 500; color: #20201E; margin: 0.9em 0 0.35em; }
+  .markdown-body h1 { font-size: 22px; }
+  .markdown-body h2 { font-size: 19px; }
+  .markdown-body h3 { font-size: 16px; }
+  .markdown-body p { margin: 0 0 0.7em; line-height: 1.7; }
+  .markdown-body p:last-child { margin-bottom: 0; }
+  .markdown-body ul, .markdown-body ol { margin: 0 0 0.7em; padding-left: 1.4em; }
+  .markdown-body li { margin-bottom: 0.3em; }
+  .markdown-body strong { font-weight: 600; color: #20201E; }
+  .markdown-body code { background: #F3F1EC; border: 1px solid #E6E4DC; border-radius: 4px; padding: 0.1em 0.4em; font-family: "JetBrains Mono", monospace; font-size: 0.85em; color: #a03a23; }
+  @keyframes severance-dot-pulse { 0%, 100% { opacity: 0.35; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.05); } }
+  @keyframes severance-step-in { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes severance-answer-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+  .thinking-dot { animation: severance-dot-pulse 1.1s ease-in-out infinite; }
+  .thinking-step { animation: severance-step-in 0.35s ease-out; }
+  .turn-answer-in { animation: severance-answer-in 0.35s ease-out; }
+</style>
+<script src="https://cdn.tailwindcss.com"></script>
+<script id="tailwind-config">
+tailwind.config = { theme: { extend: {
+  "colors": { "secondary": "#436086", "on-primary-fixed-variant": "#832510", "surface-container": "#f0edea", "clearance-internal": "#456E82", "on-background": "#1c1c1a", "background": "#fcf9f5", "surface-canvas": "#FAF9F5", "inverse-on-surface": "#f3f0ed", "text-tertiary": "#8F8D86", "surface-container-highest": "#e5e2de", "inverse-surface": "#31302e", "compartment-commercial": "#3D6273", "clearance-confidential": "#B07D38", "surface-bright": "#fcf9f5", "outline": "#8a716c", "primary-container": "#c15238", "secondary-container": "#b3d1fd", "surface-container-low": "#f6f3ef", "error": "#ba1a1a", "surface-container-high": "#ebe8e4", "primary": "#a03a23", "compartment-legal": "#7A5C3E", "surface-raised": "#FFFFFF", "clearance-public": "#6A7B76", "on-surface": "#1c1c1a", "text-primary": "#20201E", "text-secondary": "#666560", "surface-dim": "#dcdad6", "compartment-hse": "#4D7358", "on-error-container": "#93000a", "border-strong": "#D4D1C7", "surface-container-lowest": "#ffffff", "on-primary": "#ffffff", "compartment-technical": "#55606B", "clearance-secret": "#A84332", "surface-subtle": "#F3F1EC", "border-subtle": "#E6E4DC", "surface": "#fcf9f5", "compartment-vigilance": "#5C527F" },
+  "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+  "spacing": { "margin": "2rem", "space-xl": "2.5rem", "space-md": "1rem", "space-sm": "0.5rem", "gutter-mobile": "1rem", "space-xs": "0.25rem", "space-lg": "1.5rem" },
+  "fontFamily": { "headline-lg": ["Newsreader"], "headline-sm": ["Newsreader"], "body-md": ["Inter"], "title-sm": ["Inter"], "label-md": ["JetBrains Mono"], "headline-md": ["Newsreader"], "label-sm": ["JetBrains Mono"], "body-sm": ["Inter"], "title-md": ["Inter"] },
+  "fontSize": {
+    "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.015em", "fontWeight": "400" }],
+    "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "500" }],
+    "body-md": ["15px", { "lineHeight": "26px", "fontWeight": "400" }],
+    "title-sm": ["14px", { "lineHeight": "20px", "fontWeight": "600" }],
+    "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.03em", "fontWeight": "500" }],
+    "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+    "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "500" }],
+    "body-sm": ["13px", { "lineHeight": "20px", "fontWeight": "400" }],
+    "title-md": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "600" }]
+  }
+} } };
+</script>
+</head>
+<body class="bg-surface font-body-md text-body-md text-on-surface min-h-screen">
+
+<header class="fixed top-0 left-0 right-0 z-50 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(32,32,30,0.04)]">
+<div class="h-16 w-full px-space-lg flex items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-lg">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">shield_lock</span></div>
+<div class="flex flex-col leading-none">
+<span class="font-headline-sm text-headline-sm tracking-tight text-text-primary">SEVERANCE</span>
+<span class="font-label-sm text-label-sm text-text-tertiary uppercase tracking-wider">MRPL Enterprise</span>
+</div>
+</div>
+<div class="h-5 w-[1px] bg-border-subtle hidden sm:block"></div>
+<nav class="flex items-center gap-space-xs">
+<a class="px-space-md py-space-xs transition-colors bg-surface-subtle text-text-primary font-medium rounded-lg font-title-sm text-title-sm" href="/app">Workbench</a>
+<a class="px-space-md py-space-xs rounded-lg text-on-surface-variant font-title-sm text-title-sm hover:text-on-surface hover:bg-surface-subtle transition-colors" href="/admin" id="adminNavLink" style="display:none;">Access &amp; Clearance</a>
+</nav>
+</div>
+<div class="flex items-center gap-space-md">
+<div class="hidden xl:flex items-center gap-space-sm bg-surface-subtle px-space-md py-space-xs rounded-lg" id="userChipBox">
+<div class="flex flex-col text-right leading-tight">
+<div class="flex items-center justify-end gap-space-xs">
+<span class="font-title-sm text-title-sm text-text-primary" id="hdrName">—</span>
+<span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-surface text-text-secondary border border-border-subtle" id="hdrGrade">—</span>
+</div>
+<span class="font-body-sm text-body-sm text-text-secondary" id="hdrJobTitle">—</span>
+</div>
+<div class="flex items-center gap-space-xs pl-space-xs" id="hdrComps"></div>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="font-body-sm text-body-sm text-text-secondary hover:text-text-primary px-space-sm py-space-xs rounded transition-colors" onclick="doLogout()" type="button">Sign Out</button>
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div>
+</div>
+</div>
+</div>
+</header>
+
+<aside class="fixed left-0 top-16 bottom-0 w-64 bg-surface-subtle z-40 flex flex-col p-space-md gap-space-md">
+<div class="space-y-space-md shrink-0">
+<div class="px-space-xs"><span class="font-label-sm text-label-sm uppercase tracking-wider text-text-tertiary">Navigation &amp; Panes</span></div>
+<nav class="space-y-space-xs" id="sidebarNav">
+<a class="nav-item flex items-center justify-between px-space-md py-space-xs rounded-lg transition-all group bg-surface text-text-primary shadow-[0_1px_4px_rgba(32,32,30,0.03)] font-medium" data-view="workbench" href="#">
+<div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[18px] text-text-tertiary group-hover:text-text-primary transition-colors">chat_bubble_outline</span><span class="font-body-md text-body-md">Active Inquiries</span></div>
+</a>
+<a class="nav-item flex items-center justify-between px-space-md py-space-xs rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface transition-all group" data-view="corpus" href="#">
+<div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[18px] text-text-tertiary group-hover:text-text-primary transition-colors">folder_open</span><span class="font-body-md text-body-md">Corpus Documents</span></div>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-full bg-surface text-text-secondary border border-border-subtle" id="sidebarDocCount">—</span>
+</a>
+<a class="nav-item flex items-center justify-between px-space-md py-space-xs rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface transition-all group" data-view="ledger" href="#">
+<div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[18px] text-text-tertiary group-hover:text-text-primary transition-colors">verified_user</span><span class="font-body-md text-body-md">Audit Ledger</span></div>
+</a>
+</nav>
+</div>
+<div class="flex flex-col flex-1 min-h-0 gap-space-xs">
+<div class="flex items-center justify-between px-space-xs shrink-0">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-text-tertiary">History</span>
+<button class="flex items-center gap-1 px-2 py-1 rounded-lg text-text-secondary hover:text-text-primary hover:bg-surface transition-colors font-label-sm text-label-sm" id="newConversationBtn" title="Start a new conversation" type="button">
+<span class="material-symbols-outlined text-[15px]">add</span>New
+</button>
+</div>
+<div class="flex flex-col gap-0.5 overflow-y-auto flex-1 min-h-0" id="conversationHistoryList">
+<div class="px-space-md py-space-sm font-body-sm text-body-sm text-text-tertiary" id="conversationHistoryEmpty">No conversations yet.</div>
+</div>
+</div>
+<div class="p-space-sm bg-surface rounded-xl border border-border-subtle shrink-0">
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-label-sm text-label-sm text-text-tertiary uppercase tracking-wider">Session</span>
+<span class="w-2 h-2 rounded-full bg-compartment-hse"></span>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary leading-normal">Every query and clearance change is written to the immutable audit ledger.</p>
+</div>
+</aside>
+
+<div class="pl-64">
+<main class="w-full pt-16 bg-surface min-h-[calc(100vh-4rem)] flex flex-col">
+<div class="w-full max-w-[820px] mx-auto px-space-md py-space-lg flex-1">
+
+<!-- ============ WORKBENCH PANEL ============ -->
+<section id="panel-workbench">
+<div class="space-y-space-xl pb-48" id="conversationFlow">
+<div class="flex flex-col items-center justify-center text-center py-space-xl text-text-tertiary" id="emptyConversationNotice">
+<span class="material-symbols-outlined text-4xl mb-space-xs">forum</span>
+<span class="font-title-md text-title-md text-text-primary">Ask your first question</span>
+<p class="font-body-sm text-body-sm text-text-secondary max-w-sm mt-1">Questions are answered strictly from passages you are cleared to read, with every claim backed by a verbatim, machine-verified citation.</p>
+</div>
+</div>
+</section>
+
+<!-- ============ CORPUS DOCUMENTS PANEL ============ -->
+<section id="panel-corpus" class="hidden">
+<div class="relative mb-space-lg">
+<h1 class="font-headline-lg text-headline-lg text-text-primary tracking-tight font-normal">Refinery Intelligence Corpus</h1>
+<p class="font-body-md text-body-md text-text-secondary mt-space-xs max-w-2xl" id="corpusSubtitle">Loading corpus…</p>
+</div>
+<div class="flex flex-col gap-space-sm mb-space-lg">
+<div class="relative w-full">
+<div class="absolute inset-y-0 left-0 pl-space-md flex items-center pointer-events-none"><span class="material-symbols-outlined text-text-tertiary text-[20px]">search</span></div>
+<input class="w-full pl-11 pr-4 py-3 bg-surface-raised rounded-xl text-body-md text-text-primary placeholder:text-text-tertiary shadow-sm focus:outline-none focus:bg-surface-container-lowest transition-all" id="corpusSearch" placeholder="Search corpus by title or document ID…" type="text">
+</div>
+<div class="flex flex-wrap items-center justify-between gap-space-sm pt-space-xs">
+<div class="flex flex-wrap items-center gap-space-xs" id="compartmentGroup">
+<button class="filter-chip active px-3 py-1 rounded-full font-label-sm text-label-sm bg-inverse-surface text-inverse-on-surface shadow-sm transition-colors" data-filter="all" type="button">All</button>
+<button class="filter-chip px-3 py-1 rounded-full font-label-sm text-label-sm bg-surface-raised text-text-secondary hover:text-text-primary hover:bg-surface-container transition-colors" data-filter="hse" type="button">HSE</button>
+<button class="filter-chip px-3 py-1 rounded-full font-label-sm text-label-sm bg-surface-raised text-text-secondary hover:text-text-primary hover:bg-surface-container transition-colors" data-filter="technical" type="button">Technical</button>
+<button class="filter-chip px-3 py-1 rounded-full font-label-sm text-label-sm bg-surface-raised text-text-secondary hover:text-text-primary hover:bg-surface-container transition-colors" data-filter="commercial" type="button">Commercial</button>
+<button class="filter-chip px-3 py-1 rounded-full font-label-sm text-label-sm bg-surface-raised text-text-secondary hover:text-text-primary hover:bg-surface-container transition-colors" data-filter="legal" type="button">Legal</button>
+<button class="filter-chip px-3 py-1 rounded-full font-label-sm text-label-sm bg-surface-raised text-text-secondary hover:text-text-primary hover:bg-surface-container transition-colors" data-filter="vigilance" type="button">Vigilance</button>
+</div>
+<div class="flex items-center p-0.5 bg-surface-container-high rounded-lg text-text-secondary">
+<button class="px-2.5 py-1 text-label-sm font-label-sm rounded-md bg-surface-raised text-text-primary shadow-sm font-medium transition-all" id="showAllBtn" type="button">All Documents</button>
+<button class="px-2.5 py-1 text-label-sm font-label-sm rounded-md text-text-secondary hover:text-text-primary transition-all" id="showAccessibleBtn" type="button">Accessible Only</button>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-space-sm" id="documentLedger"></div>
+<div class="hidden flex-col items-center justify-center p-space-xl text-center bg-surface-container-low rounded-xl mt-space-md" id="noResultsNotice">
+<span class="material-symbols-outlined text-text-tertiary text-4xl mb-space-xs">find_in_page</span>
+<span class="font-title-md text-title-md text-text-primary">No Matching Dossiers Located</span>
+<p class="font-body-sm text-body-sm text-text-secondary max-w-sm mt-1">Try a different search term, compartment filter, or switch to "All Documents".</p>
+</div>
+</section>
+
+<!-- ============ AUDIT LEDGER PANEL ============ -->
+<section id="panel-ledger" class="hidden">
+<div class="flex flex-col gap-space-xs mb-space-lg">
+<h1 class="font-headline-lg text-headline-lg text-text-primary tracking-tight">Cryptographic Audit Ledger</h1>
+<p class="font-body-md text-body-md text-text-secondary leading-relaxed">Immutable, append-only, hash-chained verification log of every query, authentication event, and clearance transaction.</p>
+</div>
+<div class="bg-surface-raised rounded-xl p-space-lg shadow-sm mb-space-lg">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+<div class="flex items-start gap-space-md">
+<div class="w-10 h-10 rounded-lg bg-surface-subtle flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-[22px]" id="chainIcon">verified</span></div>
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-sm flex-wrap">
+<span class="font-title-sm text-title-sm text-text-primary" id="chainStatusText">Checking chain…</span>
+</div>
+<div class="flex items-center gap-space-sm flex-wrap font-label-sm text-label-sm text-text-secondary">
+<span class="text-text-tertiary">Latest Hash:</span>
+<code class="px-1.5 py-0.5 rounded bg-surface-container font-label-sm text-text-primary" id="latestHash">—</code>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-space-sm shrink-0">
+<button class="px-space-md py-2 rounded-lg bg-surface-subtle hover:bg-surface-container font-title-sm text-title-sm text-text-primary transition-colors flex items-center gap-space-xs" id="verifyBtn" type="button">
+<span class="material-symbols-outlined text-[18px] text-text-secondary" id="verifyIcon">sync</span>
+<span id="verifyBtnText">Verify Chain Integrity</span>
+</button>
+</div>
+</div>
+<div class="mt-space-md grid grid-cols-2 sm:grid-cols-4 gap-space-sm">
+<div class="bg-surface-subtle rounded-lg p-space-sm flex flex-col"><span class="font-label-sm text-label-sm text-text-tertiary uppercase">Total Rows</span><span class="font-headline-sm text-headline-sm text-text-primary" id="statHeight">—</span></div>
+<div class="bg-surface-subtle rounded-lg p-space-sm flex flex-col"><span class="font-label-sm text-label-sm text-text-tertiary uppercase">Queries</span><span class="font-headline-sm text-headline-sm text-text-primary" id="statInferences">—</span></div>
+<div class="bg-surface-subtle rounded-lg p-space-sm flex flex-col"><span class="font-label-sm text-label-sm text-text-tertiary uppercase">Clearance Events</span><span class="font-headline-sm text-headline-sm text-text-primary" id="statClearance">—</span></div>
+<div class="bg-surface-subtle rounded-lg p-space-sm flex flex-col"><span class="font-label-sm text-label-sm text-text-tertiary uppercase">Chain Breaks</span><span class="font-headline-sm text-headline-sm" id="statBreaks">—</span></div>
+</div>
+</div>
+<div class="flex items-center justify-between px-space-xs mb-space-md">
+<h2 class="font-title-md text-title-md text-text-primary">Chronological Ledger Stream</h2>
+</div>
+<div class="relative flex flex-col" id="ledgerStream"></div>
+<div class="mt-space-lg mb-space-lg flex justify-center">
+<button class="px-space-lg py-2 rounded-lg bg-surface-subtle hover:bg-surface-container font-title-sm text-title-sm text-text-secondary transition-colors" id="fetchMoreBtn" type="button">Fetch Previous 50 Rows</button>
+</div>
+</section>
+
+</div>
+</main>
+</div>
+
+<!-- ============ FLOATING PROMPT BAR (workbench only) ============ -->
+<div class="fixed bottom-0 right-0 left-0 pl-64 z-30 pointer-events-none border-t border-border-subtle/40" id="promptBarWrap" style="background-color: rgba(252, 249, 245, 0.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);">
+<div class="relative w-full max-w-4xl mx-auto px-space-md pb-6 pointer-events-auto">
+<div class="pointer-events-none absolute -top-14 left-0 right-0 h-14 bg-gradient-to-t from-surface via-surface/80 to-transparent"></div>
+<div class="relative bg-surface-raised rounded-2xl p-space-md border border-border-subtle shadow-xl space-y-space-xs transition-all" id="promptBarBox">
+<div class="hidden absolute inset-0 z-10 rounded-2xl bg-surface-raised/95 border-2 border-dashed border-primary flex flex-col items-center justify-center gap-space-xs pointer-events-none" id="dropOverlay">
+<span class="material-symbols-outlined text-primary text-[28px]">upload_file</span>
+<span class="font-title-sm text-title-sm text-primary">Drop an image or .pptx to analyze</span>
+</div>
+<div class="hidden" id="attachmentChip">
+<div class="inline-flex items-center gap-space-xs px-space-sm py-1.5 rounded-lg bg-surface-container-low border border-border-subtle mb-space-xs">
+<span class="material-symbols-outlined text-[16px] text-secondary" id="attachmentIcon">description</span>
+<span class="font-label-sm text-label-sm text-text-primary" id="attachmentLabel">file.pptx</span>
+<span class="font-label-sm text-label-sm text-text-tertiary" id="attachmentMeta"></span>
+<button aria-label="Remove attachment" class="w-4 h-4 flex items-center justify-center text-text-tertiary hover:text-clearance-secret" onclick="removeAttachment()" type="button">
+<span class="material-symbols-outlined text-[14px]">close</span>
+</button>
+</div>
+</div>
+<textarea class="w-full bg-transparent border-0 outline-none resize-none font-body-md text-body-md text-text-primary placeholder:text-text-tertiary focus:ring-0 p-0 leading-relaxed min-h-[52px]" id="questionInput" placeholder="Ask questions across authorized MRPL operational dossiers, manuals, and compliance logs…" rows="2"></textarea>
+<div class="pt-space-xs flex items-center justify-between border-t border-border-subtle/40 flex-wrap gap-space-xs">
+<div class="flex items-center gap-space-sm flex-wrap">
+<div class="flex items-center bg-surface-container-low px-2.5 py-1 rounded-lg border border-border-subtle">
+<span class="font-label-sm text-label-sm text-text-secondary mr-2">Passages:</span>
+<button class="w-5 h-5 flex items-center justify-center text-text-secondary hover:text-text-primary" onclick="adjustPassages(-1)" type="button"><span class="material-symbols-outlined text-[14px]">remove</span></button>
+<span class="font-label-md text-label-md text-text-primary px-2 font-medium" id="passage-count">3</span>
+<button class="w-5 h-5 flex items-center justify-center text-text-secondary hover:text-text-primary" onclick="adjustPassages(1)" type="button"><span class="material-symbols-outlined text-[14px]">add</span></button>
+</div>
+<div class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-surface-container-low border border-border-subtle font-label-sm text-label-sm text-compartment-hse">
+<span class="w-1.5 h-1.5 rounded-full bg-compartment-hse animate-pulse"></span><span>Veracity Gate Active</span>
+</div>
+<span class="hidden md:inline font-label-sm text-label-sm text-text-tertiary" id="scopeLabel">Scope: […]</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<input accept="image/png,image/jpeg,image/gif,image/webp,image/bmp,.pptx" class="hidden" id="fileInput" type="file">
+<button aria-label="Attach a document or image" class="w-9 h-9 rounded-xl flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-surface-container-low transition-all disabled:opacity-50" id="attachBtn" title="Attach an image or .pptx to analyze" type="button">
+<span class="material-symbols-outlined text-[18px]" id="attachIcon">attach_file</span>
+</button>
+<button aria-label="Send Query" class="w-9 h-9 rounded-xl bg-primary text-on-primary flex items-center justify-center hover:bg-primary-container transition-all shadow-sm disabled:opacity-50" id="sendBtn" type="button">
+<span class="material-symbols-outlined text-[18px]" id="sendIcon">arrow_upward</span>
+</button>
+</div>
+</div>
+</div>
+<div class="text-center mt-2"><span class="font-label-sm text-label-sm text-text-tertiary tracking-wide">Every answer is grounded in verbatim, machine-verified passage citations — never freeform recall.</span></div>
+</div>
+</div>
+
+<script src="/static/app.js"></script>
+<script>
+let currentPrincipal = null;
+let currentView = "workbench";
+let passageCount = 3;
+let allDocuments = [];
+let corpusLoaded = false;
+let ledgerLoaded = false;
+let ledgerLimit = 50;
+let currentConversationId = null; // null = not-yet-persisted new conversation
+let conversationList = [];
+
+const TIER_COLOR = { public: "clearance-public", internal: "clearance-internal", confidential: "clearance-confidential", secret: "clearance-secret" };
+const COMP_COLOR = { hse: "compartment-hse", vigilance: "compartment-vigilance", legal: "compartment-legal", commercial: "compartment-commercial", technical: "compartment-technical" };
+
+function tierPill(tier) {
+  const c = TIER_COLOR[tier] || "text-secondary";
+  return `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-surface-container font-label-sm text-label-sm text-${c} font-medium"><span class="material-symbols-outlined text-[13px]">shield</span>${escapeHtml(tier)}</span>`;
+}
+function compPill(comp) {
+  const c = COMP_COLOR[comp] || "text-secondary";
+  return `<span class="px-2 py-0.5 rounded bg-surface-container-highest font-label-sm text-label-sm text-${c} uppercase">${escapeHtml(comp)}</span>`;
+}
+
+async function init() {
+  currentPrincipal = await getCurrentPrincipal();
+  if (!currentPrincipal) return;
+
+  document.getElementById("hdrName").textContent = currentPrincipal.name;
+  document.getElementById("hdrGrade").textContent = `Grade ${currentPrincipal.grade}`;
+  document.getElementById("hdrJobTitle").textContent = currentPrincipal.job_title;
+  document.getElementById("hdrComps").innerHTML = (currentPrincipal.compartments || []).map(
+    c => `<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-surface border border-${COMP_COLOR[c] || "border-subtle"}/30 text-${COMP_COLOR[c] || "text-secondary"} uppercase font-medium">${escapeHtml(c)}</span>`
+  ).join("");
+  document.getElementById("scopeLabel").textContent = `Scope: [${(currentPrincipal.compartments || []).join(", ") || "none"}]`;
+
+  if (currentPrincipal.is_admin) {
+    document.getElementById("adminNavLink").style.display = "inline-block";
+  } else {
+    const grantsRes = await fetchAPI("/grants/mine");
+    if (grantsRes.ok) {
+      const data = await grantsRes.json();
+      if (data.sponsored_compartments && data.sponsored_compartments.length > 0) {
+        document.getElementById("adminNavLink").style.display = "inline-block";
+      }
+    }
+  }
+
+  loadDocuments();
+  loadConversationList();
+
+  document.querySelectorAll("#sidebarNav .nav-item").forEach(el => {
+    el.addEventListener("click", (e) => {
+      e.preventDefault();
+      switchView(el.getAttribute("data-view"));
+    });
+  });
+
+  document.getElementById("newConversationBtn").addEventListener("click", startNewConversation);
+}
+
+function switchView(view) {
+  currentView = view;
+  document.querySelectorAll("#sidebarNav .nav-item").forEach(el => {
+    const active = el.getAttribute("data-view") === view;
+    el.classList.toggle("bg-surface", active);
+    el.classList.toggle("text-text-primary", active);
+    el.classList.toggle("shadow-[0_1px_4px_rgba(32,32,30,0.03)]", active);
+    el.classList.toggle("font-medium", active);
+    el.classList.toggle("text-on-surface-variant", !active);
+  });
+  document.getElementById("panel-workbench").classList.toggle("hidden", view !== "workbench");
+  document.getElementById("panel-corpus").classList.toggle("hidden", view !== "corpus");
+  document.getElementById("panel-ledger").classList.toggle("hidden", view !== "ledger");
+  document.getElementById("promptBarWrap").style.display = view === "workbench" ? "block" : "none";
+
+  if (view === "corpus") {
+    if (corpusLoaded) renderDocuments();
+    else loadDocuments(true);
+  }
+  if (view === "ledger" && !ledgerLoaded) loadLedger();
+}
+
+/* ========================= CONVERSATION HISTORY ========================= */
+// Persisted server-side (see trust/conversations.py) -- survives logout and
+// is scoped strictly to the logged-in person. `currentConversationId` is
+// null for a not-yet-persisted new conversation; the backend assigns one on
+// the first message and returns it in AskResponse.conversation_id.
+
+function fmtRelativeTime(unixSeconds) {
+  const diffMs = Date.now() - unixSeconds * 1000;
+  const mins = Math.floor(diffMs / 60000);
+  if (mins < 1) return "just now";
+  if (mins < 60) return `${mins}m ago`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 7) return `${days}d ago`;
+  return new Date(unixSeconds * 1000).toLocaleDateString();
+}
+
+async function loadConversationList() {
+  try {
+    const res = await fetchAPI("/conversations");
+    if (!res.ok) return;
+    conversationList = await res.json();
+    renderConversationList();
+  } catch (err) {
+    console.error("Failed to load conversation history:", err);
+  }
+}
+
+function renderConversationList() {
+  const container = document.getElementById("conversationHistoryList");
+  if (!conversationList.length) {
+    container.innerHTML = `<div class="px-space-md py-space-sm font-body-sm text-body-sm text-text-tertiary" id="conversationHistoryEmpty">No conversations yet.</div>`;
+    return;
+  }
+  container.innerHTML = conversationList.map(c => {
+    const active = c.conversation_id === currentConversationId;
+    return `
+      <div class="group flex items-center gap-0.5 rounded-lg ${active ? "bg-surface text-text-primary shadow-sm" : "text-text-secondary hover:bg-surface hover:text-text-primary"} transition-colors">
+        <button class="flex-1 min-w-0 text-left px-space-sm py-2 font-body-sm text-body-sm truncate" onclick="openConversation('${c.conversation_id}')" title="${escapeHtml(c.title)} • ${fmtRelativeTime(c.updated_at)}" type="button">${escapeHtml(c.title)}</button>
+        <div class="hidden group-hover:flex items-center pr-1 gap-0.5 shrink-0">
+          <button class="w-6 h-6 rounded flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-surface-container" onclick="event.stopPropagation(); renameConversationItem('${c.conversation_id}')" title="Rename" type="button"><span class="material-symbols-outlined text-[14px]">edit</span></button>
+          <button class="w-6 h-6 rounded flex items-center justify-center text-text-tertiary hover:text-clearance-secret hover:bg-surface-container" onclick="event.stopPropagation(); deleteConversationItem('${c.conversation_id}')" title="Delete" type="button"><span class="material-symbols-outlined text-[14px]">delete</span></button>
+        </div>
+      </div>`;
+  }).join("");
+}
+
+function startNewConversation() {
+  currentConversationId = null;
+  document.getElementById("conversationFlow").innerHTML = `
+    <div class="flex flex-col items-center justify-center text-center py-space-xl text-text-tertiary" id="emptyConversationNotice">
+      <span class="material-symbols-outlined text-4xl mb-space-xs">forum</span>
+      <span class="font-title-md text-title-md text-text-primary">Ask your first question</span>
+      <p class="font-body-sm text-body-sm text-text-secondary max-w-sm mt-1">Questions are answered strictly from passages you are cleared to read, with every claim backed by a verbatim, machine-verified citation.</p>
+    </div>`;
+  switchView("workbench");
+  renderConversationList();
+}
+
+async function openConversation(conversationId) {
+  try {
+    const res = await fetchAPI(`/conversations/${conversationId}`);
+    if (!res.ok) {
+      if (res.status === 404) loadConversationList(); // stale entry (e.g. deleted elsewhere) -- refresh
+      return;
+    }
+    const data = await res.json();
+    currentConversationId = data.conversation_id;
+    const flow = document.getElementById("conversationFlow");
+    flow.innerHTML = "";
+    for (const turn of data.turns) {
+      renderHistoricalTurn(turn.question, turn.response);
+    }
+    switchView("workbench");
+    renderConversationList();
+    flow.scrollIntoView({ behavior: "smooth", block: "start" });
+  } catch (err) {
+    console.error("Failed to open conversation:", err);
+  }
+}
+
+/** Renders one already-answered turn instantly (no live log/animation) --
+ * used when loading a persisted conversation's history, as opposed to
+ * appendQuestionBubble() + handleStreamEvent() for a turn happening live. */
+function renderHistoricalTurn(question, response) {
+  document.getElementById("emptyConversationNotice")?.remove();
+  const flow = document.getElementById("conversationFlow");
+  const turnId = `turn-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+
+  const wrap = document.createElement("div");
+  wrap.className = "space-y-space-md pt-space-md";
+  wrap.id = `${turnId}-wrap`;
+  wrap.innerHTML = `
+    <div class="space-y-space-sm">
+      <div class="flex items-center gap-space-xs">
+        <span class="font-label-sm text-label-sm uppercase tracking-wider text-text-tertiary">Inquirer</span>
+        <span class="font-label-sm text-label-sm text-text-secondary">• ${escapeHtml(currentPrincipal.name)}</span>
+      </div>
+      <div class="bg-surface-subtle rounded-xl p-space-lg shadow-sm">
+        <p class="font-headline-md text-headline-md text-text-primary leading-snug">${escapeHtml(question)}</p>
+      </div>
+    </div>
+    <div id="${turnId}-body"></div>
+  `;
+  flow.appendChild(wrap);
+  renderAnswerBody(turnId, response);
+}
+
+async function renameConversationItem(conversationId) {
+  const current = conversationList.find(c => c.conversation_id === conversationId);
+  const title = prompt("Rename conversation:", current ? current.title : "");
+  if (title === null || !title.trim()) return;
+  try {
+    const res = await fetchAPI(`/conversations/${conversationId}`, {
+      method: "PATCH",
+      body: JSON.stringify({ title: title.trim() }),
+    });
+    if (res.ok) loadConversationList();
+  } catch (err) {
+    console.error("Failed to rename conversation:", err);
+  }
+}
+
+async function deleteConversationItem(conversationId) {
+  if (!confirm("Delete this conversation? This cannot be undone.")) return;
+  try {
+    const res = await fetchAPI(`/conversations/${conversationId}`, { method: "DELETE" });
+    if (res.ok) {
+      if (conversationId === currentConversationId) startNewConversation();
+      loadConversationList();
+    }
+  } catch (err) {
+    console.error("Failed to delete conversation:", err);
+  }
+}
+
+/* ========================= WORKBENCH ========================= */
+
+function adjustPassages(delta) {
+  const val = passageCount + delta;
+  if (val >= 1 && val <= 10) {
+    passageCount = val;
+    document.getElementById("passage-count").textContent = val;
+  }
+}
+
+function fmtTime(d) {
+  return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+}
+
+function renderDenials(denials, compact) {
+  if (!denials || denials.length === 0) return "";
+  const items = denials.map(d => `
+    <div class="bg-surface-container-low p-space-md rounded-lg flex items-center justify-between gap-space-sm">
+      <div class="flex items-center gap-space-sm">
+        <span class="material-symbols-outlined text-[18px] text-text-tertiary">folder_special</span>
+        <div><span class="font-label-md text-label-md text-text-primary block">${escapeHtml(d.doc_id)}</span>
+        <span class="font-body-sm text-body-sm text-text-secondary">${escapeHtml(d.reason)}</span></div>
+      </div>
+    </div>`).join("");
+  return `
+    <div class="p-space-md bg-surface-container rounded-lg space-y-space-xs">
+      <div class="flex items-center gap-space-xs text-clearance-confidential">
+        <span class="material-symbols-outlined text-[17px]">policy</span>
+        <span class="font-title-sm text-title-sm font-semibold">${denials.length} Document${denials.length === 1 ? "" : "s"} Withheld by Security Gate</span>
+      </div>
+      <div class="space-y-space-xs pl-space-md">${items}</div>
+    </div>`;
+}
+
+function renderCitations(citations) {
+  if (!citations || citations.length === 0) return "";
+  const items = citations.map(c => `
+    <div class="bg-surface-container-lowest p-space-md rounded-lg shadow-sm space-y-2">
+      <div class="flex items-center justify-between flex-wrap gap-1">
+        <div class="flex items-center gap-space-xs">
+          <span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-surface-container font-medium text-text-primary">${escapeHtml(c.doc_id)}</span>
+          <span class="font-label-sm text-label-sm text-text-tertiary">Page ${c.page}</span>
+        </div>
+      </div>
+      <blockquote class="font-body-sm text-body-sm text-text-secondary pl-space-sm bg-surface-container-low/50 py-1 rounded">"${escapeHtml(c.quote)}"</blockquote>
+    </div>`).join("");
+  return `
+    <div class="pt-space-md space-y-space-sm">
+      <div class="flex items-center gap-space-xs">
+        <span class="material-symbols-outlined text-[18px] text-compartment-hse">format_quote</span>
+        <span class="font-title-sm text-title-sm text-text-primary">Verbatim Verified Citations (${citations.length})</span>
+      </div>
+      <div class="grid grid-cols-1 gap-space-sm">${items}</div>
+    </div>`;
+}
+
+// turnId -> ordered array of {key, icon, label, state: 'active'|'done'|'fail'}.
+// Populated entirely from REAL /ask/stream events emitted by harness/runner.py
+// as each pipeline stage actually happens -- not a timed guess. See
+// handleStreamEvent() below for the event -> log-line mapping.
+const liveLogs = {};
+
+/** Renders the user's question immediately, plus an empty live-log
+ * placeholder for the assistant turn. Returns the turnId to fill in later. */
+function appendQuestionBubble(question, topK) {
+  document.getElementById("emptyConversationNotice")?.remove();
+  const flow = document.getElementById("conversationFlow");
+  const turnId = `turn-${Date.now()}`;
+
+  const wrap = document.createElement("div");
+  wrap.className = "space-y-space-md pt-space-md";
+  wrap.id = `${turnId}-wrap`;
+  wrap.innerHTML = `
+    <div class="space-y-space-sm">
+      <div class="flex items-center gap-space-xs">
+        <span class="font-label-sm text-label-sm uppercase tracking-wider text-text-tertiary">Inquirer</span>
+        <span class="font-label-sm text-label-sm text-text-secondary">• ${escapeHtml(currentPrincipal.name)}</span>
+      </div>
+      <div class="bg-surface-subtle rounded-xl p-space-lg shadow-sm">
+        <p class="font-headline-md text-headline-md text-text-primary leading-snug">${escapeHtml(question)}</p>
+        <div class="mt-space-md pt-space-xs flex items-center justify-between text-text-tertiary flex-wrap gap-1">
+          <div class="flex items-center gap-space-xs font-label-sm text-label-sm">
+            <span class="material-symbols-outlined text-[16px]">tune</span>
+            <span>TOP PASSAGES REQUESTED: ${topK}</span>
+          </div>
+          <span class="font-label-sm text-label-sm">${fmtTime(new Date())}</span>
+        </div>
+      </div>
+    </div>
+    <div id="${turnId}-body"></div>
+  `;
+  flow.appendChild(wrap);
+  initLiveLog(turnId);
+  wrap.scrollIntoView({ behavior: "smooth", block: "start" });
+  return turnId;
+}
+
+function initLiveLog(turnId) {
+  liveLogs[turnId] = [];
+  const body = document.getElementById(`${turnId}-body`);
+  body.innerHTML = `
+    <div class="bg-surface-raised rounded-xl p-space-xl shadow-sm">
+      <div class="flex flex-col gap-space-sm" id="${turnId}-steps"></div>
+    </div>`;
+}
+
+function renderLiveLog(turnId) {
+  const stepsEl = document.getElementById(`${turnId}-steps`);
+  if (!stepsEl) return;
+  const steps = liveLogs[turnId] || [];
+  stepsEl.innerHTML = steps.map(step => {
+    if (step.state === "done") {
+      return `<div class="flex items-center gap-space-sm text-text-tertiary">
+        <span class="material-symbols-outlined text-[16px] text-compartment-hse">check_circle</span>
+        <span class="font-body-sm text-body-sm line-through decoration-text-tertiary/40">${escapeHtml(step.label)}</span>
+      </div>`;
+    }
+    if (step.state === "fail") {
+      return `<div class="flex items-center gap-space-sm text-clearance-secret">
+        <span class="material-symbols-outlined text-[16px]">cancel</span>
+        <span class="font-body-sm text-body-sm">${escapeHtml(step.label)}</span>
+      </div>`;
+    }
+    return `<div class="flex items-center gap-space-sm text-text-primary thinking-step">
+      <span class="material-symbols-outlined text-[16px] text-primary thinking-dot">${step.icon}</span>
+      <span class="font-body-sm text-body-sm">${escapeHtml(step.label)}</span>
+    </div>`;
+  }).join("");
+}
+
+/** Insert or update one log line, keyed so a later event (e.g. "done") updates
+ * the SAME line an earlier event (e.g. "start") created, rather than adding a
+ * duplicate. `key` should be unique per pipeline stage+attempt (e.g.
+ * "drafting-2" for the 2nd drafting attempt). */
+function upsertLogStep(turnId, key, icon, label, state) {
+  if (!liveLogs[turnId]) liveLogs[turnId] = [];
+  const steps = liveLogs[turnId];
+  const existing = steps.find(s => s.key === key);
+  if (existing) {
+    existing.icon = icon;
+    existing.label = label;
+    existing.state = state;
+  } else {
+    steps.push({ key, icon, label, state });
+  }
+  renderLiveLog(turnId);
+}
+
+/** Maps ONE real event from POST /ask/stream (see harness/runner.py's `emit`
+ * calls) into a human-readable log line. Every line here corresponds to an
+ * actual backend stage transition that already happened by the time this
+ * runs -- there is no simulated timing anywhere in this function. */
+function handleStreamEvent(turnId, event) {
+  const { stage, status } = event;
+  switch (stage) {
+    case "intent":
+      if (status === "start") {
+        upsertLogStep(turnId, "intent", "psychology", "Classifying your question…", "active");
+      } else {
+        const labelByCategory = {
+          content: "Classified as a document question",
+          capability: "Classified as a question about my own capabilities",
+          other: "Classified as casual chatter, not a specific question",
+        };
+        upsertLogStep(turnId, "intent", "psychology", labelByCategory[event.category] || "Classified your question", "done");
+      }
+      break;
+    case "capability":
+      if (status === "start") {
+        upsertLogStep(turnId, "capability", "auto_awesome", "Composing an answer from real system data…", "active");
+      } else {
+        upsertLogStep(turnId, "capability", "auto_awesome", "Composed answer from real system data", "done");
+      }
+      break;
+    case "retrieval":
+      if (status === "start") {
+        upsertLogStep(turnId, "retrieval", "travel_explore", "Searching the corpus for relevant passages…", "active");
+      } else {
+        const { passages_found, denials_found } = event;
+        let label;
+        if (passages_found === 0 && denials_found === 0) {
+          label = "No relevant passages found in the corpus";
+        } else if (passages_found === 0) {
+          label = `No readable passages matched — ${denials_found} document(s) withheld by security gate`;
+        } else {
+          label = `Found ${passages_found} relevant passage(s)` + (denials_found ? `, ${denials_found} document(s) withheld by security gate` : "");
+        }
+        upsertLogStep(turnId, "retrieval", "travel_explore", label, "done");
+      }
+      break;
+    case "drafting": {
+      const key = `drafting-${event.attempt}`;
+      if (status === "start") {
+        const label = event.max_attempts > 1
+          ? `Drafting answer (attempt ${event.attempt} of ${event.max_attempts})…`
+          : "Drafting answer…";
+        upsertLogStep(turnId, key, "auto_awesome", label, "active");
+      } else if (status === "done") {
+        upsertLogStep(turnId, key, "auto_awesome", `Drafted answer with ${event.citations_claimed} citation(s) (attempt ${event.attempt})`, "done");
+      } else if (status === "error") {
+        upsertLogStep(turnId, key, "auto_awesome", `Drafting backend unavailable on attempt ${event.attempt}`, "fail");
+      }
+      break;
+    }
+    case "verification": {
+      const key = `verification-${event.attempt}`;
+      if (status === "start") {
+        upsertLogStep(turnId, key, "fact_check", `Verifying citations verbatim (attempt ${event.attempt})…`, "active");
+      } else if (status === "pass") {
+        upsertLogStep(turnId, key, "fact_check", `Citations verified (attempt ${event.attempt})`, "done");
+      } else if (status === "fail") {
+        upsertLogStep(turnId, key, "fact_check", `Citation verification failed (attempt ${event.attempt}) — retrying…`, "fail");
+      }
+      break;
+    }
+    case "vision": {
+      const key = `vision-${event.label}`;
+      if (status === "start") {
+        upsertLogStep(turnId, key, "visibility", `Analyzing image with vision model (${event.label})…`, "active");
+      } else {
+        upsertLogStep(turnId, key, "visibility", `Analyzed image (${event.label})`, "done");
+      }
+      break;
+    }
+    default:
+      break;
+  }
+}
+
+function renderAnswerBody(turnId, data) {
+  const isAnswered = data.status === "answered";
+  const statusPill = isAnswered
+    ? `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-surface-container font-label-sm text-label-sm text-compartment-hse font-medium"><span class="w-1.5 h-1.5 rounded-full bg-compartment-hse"></span>Answered</span>`
+    : `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-surface-container font-label-sm text-label-sm text-text-secondary font-medium"><span class="w-1.5 h-1.5 rounded-full bg-text-tertiary"></span>Abstained</span>`;
+  const compPills = (data.effective_label.compartments || []).map(compPill).join("");
+
+  const body = document.getElementById(`${turnId}-body`);
+  body.className = "space-y-space-md turn-answer-in";
+  body.innerHTML = `
+    <div class="flex flex-wrap items-center justify-between gap-space-sm">
+      <div class="flex items-center gap-space-xs flex-wrap">
+        ${statusPill}
+        ${tierPill(data.effective_label.tier)}
+        ${compPills}
+      </div>
+    </div>
+    <div class="bg-surface-raised rounded-xl p-space-xl shadow-sm space-y-space-md">
+      <div class="markdown-body" id="${turnId}-answer"></div>
+      ${renderCitations(data.citations)}
+      ${renderDenials(data.denials)}
+      <div class="pt-space-sm flex items-center justify-between flex-wrap gap-2">
+        <div class="flex items-center gap-space-xs">
+          ${isAnswered && data.ledger_row_id ? `<a class="inline-flex items-center gap-space-xs px-space-md py-1.5 rounded-lg bg-surface-container text-text-primary font-title-sm text-title-sm hover:bg-surface-container-highest transition-colors shadow-sm" href="/report/${data.ledger_row_id}"><span class="material-symbols-outlined text-[16px]">description</span>Download Report (.docx)</a>` : ""}
+          <button class="inline-flex items-center gap-space-xs px-space-md py-1.5 rounded-lg bg-transparent text-text-secondary font-title-sm text-title-sm hover:text-text-primary hover:bg-surface-container transition-colors" onclick="document.getElementById('${turnId}-json').classList.toggle('hidden')" type="button">
+            <span class="material-symbols-outlined text-[16px]">code</span>Raw JSON
+          </button>
+        </div>
+        <button class="w-8 h-8 rounded-lg flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-surface-container transition-colors" onclick="navigator.clipboard.writeText(${JSON.stringify(data.answer)})" title="Copy response text" type="button">
+          <span class="material-symbols-outlined text-[18px]">content_copy</span>
+        </button>
+      </div>
+      <div class="hidden pt-space-xs" id="${turnId}-json">
+        <pre class="bg-surface-container-highest text-text-secondary p-space-md rounded-lg font-label-sm text-label-sm overflow-x-auto max-w-full" style="white-space: pre-wrap; word-break: break-word;">${escapeHtml(JSON.stringify(data, null, 2))}</pre>
+      </div>
+    </div>
+  `;
+  document.getElementById(`${turnId}-answer`).innerHTML = renderMarkdown(data.answer);
+}
+
+/** FastAPI returns `detail` as a plain string for HTTPException, but as an
+ * ARRAY of {loc, msg, type} objects for Pydantic validation errors (422s) —
+ * e.g. when the question is shorter than AskRequest's min_length. Stringifying
+ * that array directly produces the literal text "[object Object]". */
+function formatErrorDetail(detail, fallback) {
+  if (!detail) return fallback;
+  if (typeof detail === "string") return detail;
+  if (Array.isArray(detail)) {
+    return detail.map(e => (e && typeof e === "object" && e.msg) ? e.msg : JSON.stringify(e)).join("; ");
+  }
+  return JSON.stringify(detail);
+}
+
+function renderTurnError(turnId, message) {
+  const body = document.getElementById(`${turnId}-body`);
+  body.innerHTML = `
+    <div class="bg-surface-raised rounded-xl p-space-lg shadow-sm flex items-center gap-space-sm text-clearance-secret">
+      <span class="material-symbols-outlined text-[20px]">error</span>
+      <span class="font-body-sm text-body-sm">${escapeHtml(message)}</span>
+    </div>`;
+}
+
+/* ========================= EPHEMERAL FILE ATTACHMENT ========================= */
+// Uploaded via POST /ask/upload, held in memory server-side scoped to this
+// user only (never written to the governed corpus, never labeled, no
+// clearance gate) -- see ingest/ephemeral.py. `pendingUpload` mirrors that
+// state client-side so /ask/stream can pass its upload_id along.
+let pendingUpload = null; // { upload_id, filename, text_chunks, images }
+
+function renderAttachmentChip() {
+  const chip = document.getElementById("attachmentChip");
+  if (!pendingUpload) {
+    chip.classList.add("hidden");
+    return;
+  }
+  chip.classList.remove("hidden");
+  document.getElementById("attachmentIcon").textContent = pendingUpload.images > 0 && pendingUpload.text_chunks === 0
+    ? "image"
+    : "description";
+  document.getElementById("attachmentLabel").textContent = pendingUpload.filename;
+  const parts = [];
+  if (pendingUpload.text_chunks) parts.push(`${pendingUpload.text_chunks} text section(s)`);
+  if (pendingUpload.images) parts.push(`${pendingUpload.images} image(s)`);
+  document.getElementById("attachmentMeta").textContent = parts.length ? `· ${parts.join(", ")}` : "";
+}
+
+async function removeAttachment() {
+  if (pendingUpload) {
+    // Best-effort: don't block clearing the UI state on this succeeding.
+    fetch(`/ask/upload/${pendingUpload.upload_id}`, { method: "DELETE", credentials: "same-origin" }).catch(() => {});
+  }
+  pendingUpload = null;
+  document.getElementById("fileInput").value = "";
+  renderAttachmentChip();
+}
+
+async function handleFileSelected(file) {
+  if (!file) return;
+  const attachBtn = document.getElementById("attachBtn");
+  const attachIcon = document.getElementById("attachIcon");
+  attachBtn.disabled = true;
+  attachIcon.textContent = "hourglass_top";
+
+  const formData = new FormData();
+  formData.append("file", file);
+
+  try {
+    // FormData sets its own multipart Content-Type (with boundary) -- fetchAPI
+    // hardcodes application/json, so this uses a direct fetch() instead.
+    const res = await fetch("/ask/upload", {
+      method: "POST",
+      credentials: "same-origin",
+      body: formData,
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      alert(formatErrorDetail(data.detail, "Upload failed."));
+      return;
+    }
+    pendingUpload = data;
+    renderAttachmentChip();
+  } catch (err) {
+    alert("Upload failed: " + err.message);
+  } finally {
+    attachBtn.disabled = false;
+    attachIcon.textContent = "attach_file";
+  }
+}
+
+document.getElementById("attachBtn").addEventListener("click", () => {
+  document.getElementById("fileInput").click();
+});
+document.getElementById("fileInput").addEventListener("change", (e) => {
+  handleFileSelected(e.target.files[0]);
+});
+
+/* ========================= DRAG & DROP ========================= */
+// Reuses the exact same handleFileSelected() upload path as the attach
+// button and file picker -- drag/drop is just another way to fill the same
+// hidden <input type="file">'s role, not a separate upload mechanism.
+(function () {
+  const dropOverlay = document.getElementById("dropOverlay");
+  let dragDepth = 0; // tracks nested dragenter/dragleave pairs across child elements
+
+  function isFileDrag(e) {
+    return e.dataTransfer && Array.from(e.dataTransfer.types || []).includes("Files");
+  }
+
+  document.addEventListener("dragenter", (e) => {
+    if (!isFileDrag(e)) return;
+    e.preventDefault();
+    dragDepth++;
+    dropOverlay.classList.remove("hidden");
+    dropOverlay.classList.add("flex");
+  });
+
+  document.addEventListener("dragover", (e) => {
+    // Always prevent default on a file drag, everywhere on the page --
+    // otherwise the browser's default action is to navigate away and open
+    // the dropped file as its own page.
+    if (isFileDrag(e)) e.preventDefault();
+  });
+
+  document.addEventListener("dragleave", (e) => {
+    if (!isFileDrag(e)) return;
+    dragDepth = Math.max(0, dragDepth - 1);
+    if (dragDepth === 0) {
+      dropOverlay.classList.add("hidden");
+      dropOverlay.classList.remove("flex");
+    }
+  });
+
+  document.addEventListener("drop", (e) => {
+    if (!isFileDrag(e)) return;
+    e.preventDefault();
+    dragDepth = 0;
+    dropOverlay.classList.add("hidden");
+    dropOverlay.classList.remove("flex");
+
+    const file = e.dataTransfer.files && e.dataTransfer.files[0];
+    if (!file) return;
+    if (currentView !== "workbench") switchView("workbench");
+    handleFileSelected(file);
+  });
+})();
+
+async function sendQuery() {
+  const input = document.getElementById("questionInput");
+  const question = input.value.trim();
+  if (!question) return;
+  if (question.length < 3) {
+    alert("Please enter at least 3 characters — the corpus query engine needs a real question to search against.");
+    return;
+  }
+
+  const btn = document.getElementById("sendBtn");
+  const icon = document.getElementById("sendIcon");
+  btn.disabled = true;
+  icon.textContent = "hourglass_top";
+  input.value = "";
+
+  const topK = passageCount;
+  const attachedUpload = pendingUpload;
+  const turnId = appendQuestionBubble(
+    attachedUpload ? `${question}\n\n📎 ${attachedUpload.filename}` : question,
+    topK
+  );
+
+  try {
+    const res = await fetchAPI("/ask/stream", {
+      method: "POST",
+      body: JSON.stringify({
+        question,
+        top_k: topK,
+        ...(attachedUpload ? { upload_id: attachedUpload.upload_id } : {}),
+        ...(currentConversationId ? { conversation_id: currentConversationId } : {}),
+      }),
+    });
+
+    if (!res.ok) {
+      let detail = "Query failed.";
+      try {
+        const errData = await res.json();
+        detail = formatErrorDetail(errData.detail, detail);
+      } catch (_) { /* body wasn't JSON; keep the generic message */ }
+      renderTurnError(turnId, detail);
+      return;
+    }
+
+    // The response body is newline-delimited JSON: each line is one REAL
+    // backend event as it happens (see api/routes/ask.py's /ask/stream and
+    // harness/runner.py's `emit` calls), ending with a "final" line carrying
+    // the same AskResponse shape POST /ask returns.
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+    let settled = false;
+
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+
+      let newlineIdx;
+      while ((newlineIdx = buffer.indexOf("\n")) >= 0) {
+        const line = buffer.slice(0, newlineIdx).trim();
+        buffer = buffer.slice(newlineIdx + 1);
+        if (!line) continue;
+
+        let event;
+        try {
+          event = JSON.parse(line);
+        } catch (_) {
+          continue; // ignore a malformed line rather than breaking the whole stream
+        }
+
+        if (event.stage === "final") {
+          renderAnswerBody(turnId, event.response);
+          document.getElementById(`${turnId}-wrap`).scrollIntoView({ behavior: "smooth", block: "start" });
+          settled = true;
+          if (event.response.conversation_id) {
+            currentConversationId = event.response.conversation_id;
+            loadConversationList();
+          }
+        } else if (event.stage === "error") {
+          renderTurnError(turnId, event.message || "Query failed.");
+          settled = true;
+        } else {
+          handleStreamEvent(turnId, event);
+        }
+      }
+    }
+
+    if (!settled) {
+      renderTurnError(turnId, "Connection closed before a response was received.");
+    }
+  } catch (err) {
+    renderTurnError(turnId, "Query execution failed: " + err.message);
+  } finally {
+    delete liveLogs[turnId];
+    btn.disabled = false;
+    icon.textContent = "arrow_upward";
+  }
+}
+
+document.getElementById("sendBtn").addEventListener("click", sendQuery);
+document.getElementById("questionInput").addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    sendQuery();
+  }
+});
+
+/* ========================= CORPUS DOCUMENTS ========================= */
+
+async function loadDocuments(forceRender) {
+  try {
+    const res = await fetchAPI("/documents");
+    allDocuments = await res.json();
+    corpusLoaded = true;
+    document.getElementById("sidebarDocCount").textContent = allDocuments.length;
+    if (forceRender || currentView === "corpus") renderDocuments();
+  } catch (err) {
+    console.error("Failed to load documents:", err);
+  }
+}
+
+function renderDocuments() {
+  const container = document.getElementById("documentLedger");
+  const accessibleCount = allDocuments.filter(d => d.readable).length;
+  document.getElementById("corpusSubtitle").textContent =
+    `${allDocuments.length} total records • ${accessibleCount} accessible to you.`;
+
+  container.innerHTML = allDocuments.map(d => {
+    const tierClass = TIER_COLOR[d.label.tier] || "text-secondary";
+    const compBadges = d.label.compartments.map(c => `<span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-surface-subtle text-${COMP_COLOR[c] || "text-secondary"}">${escapeHtml(c)}</span>`).join("");
+    const compData = d.label.compartments.join(" ");
+
+    if (d.readable) {
+      return `
+      <article class="doc-item p-space-md sm:p-space-lg bg-surface-raised rounded-xl shadow-sm hover:shadow-md transition-all duration-200" data-compartments="${escapeHtml(compData)}" data-status="readable">
+        <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-space-sm">
+          <div class="space-y-space-xs flex-1">
+            <div class="flex flex-wrap items-center gap-space-xs">
+              <span class="font-label-sm text-label-sm font-medium text-text-primary tracking-wide bg-surface-container px-2 py-0.5 rounded">${escapeHtml(d.doc_id)}</span>
+              <span class="font-label-sm text-label-sm px-2 py-0.5 rounded-full bg-${tierClass}/10 text-${tierClass}">${escapeHtml(d.label.tier)}</span>
+              ${compBadges}
+            </div>
+            <h2 class="font-headline-sm text-headline-sm text-text-primary pt-space-xs">${escapeHtml(d.title)}</h2>
+            <p class="font-body-sm text-body-sm text-text-secondary pt-space-xs">${escapeHtml(d.source)}</p>
+          </div>
+          <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full font-label-sm text-label-sm bg-compartment-hse/10 text-compartment-hse font-medium shrink-0">
+            <span class="material-symbols-outlined text-[14px]">lock_open_right</span>Readable
+          </span>
+        </div>
+      </article>`;
+    }
+    return `
+      <article class="doc-item p-space-md sm:p-space-lg bg-surface-container-low/80 rounded-xl transition-all duration-200 opacity-90 hover:opacity-100" data-compartments="${escapeHtml(compData)}" data-status="locked">
+        <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-space-sm">
+          <div class="space-y-space-xs flex-1">
+            <div class="flex flex-wrap items-center gap-space-xs">
+              <span class="font-label-sm text-label-sm font-medium text-text-secondary tracking-wide bg-surface-container-high px-2 py-0.5 rounded">${escapeHtml(d.doc_id)}</span>
+              <span class="font-label-sm text-label-sm px-2 py-0.5 rounded-full bg-${tierClass}/10 text-${tierClass}">${escapeHtml(d.label.tier)}</span>
+              ${compBadges}
+            </div>
+            <h2 class="font-headline-sm text-headline-sm text-text-secondary pt-space-xs">${escapeHtml(d.title)}</h2>
+            <p class="font-body-sm text-body-sm text-text-tertiary pt-space-xs">${escapeHtml(d.source)}</p>
+          </div>
+          <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full font-label-sm text-label-sm bg-clearance-confidential/10 text-clearance-confidential font-medium shrink-0">
+            <span class="material-symbols-outlined text-[14px]">lock</span>Locked
+          </span>
+        </div>
+        <div class="mt-space-md p-space-sm bg-surface-container rounded-lg flex items-center gap-space-xs text-text-secondary">
+          <span class="material-symbols-outlined text-[16px] text-clearance-confidential">gpp_maybe</span>
+          <span class="font-body-sm text-body-sm">${escapeHtml(d.denial_reason || "Access denied.")}</span>
+        </div>
+      </article>`;
+  }).join("");
+
+  filterDocs();
+}
+
+function filterDocs() {
+  const query = (document.getElementById("corpusSearch").value || "").toLowerCase().trim();
+  const currentCompartment = document.querySelector("#compartmentGroup .filter-chip.active")?.getAttribute("data-filter") || "all";
+  const accessibleOnly = document.getElementById("showAccessibleBtn").classList.contains("bg-surface-raised");
+  let visibleCount = 0;
+
+  document.querySelectorAll(".doc-item").forEach(item => {
+    const text = item.textContent.toLowerCase();
+    const compartments = item.getAttribute("data-compartments") || "";
+    const status = item.getAttribute("data-status") || "";
+    const matchesQuery = query === "" || text.includes(query);
+    const matchesCompartment = currentCompartment === "all" || compartments.includes(currentCompartment);
+    const matchesAccess = !accessibleOnly || status === "readable";
+    const visible = matchesQuery && matchesCompartment && matchesAccess;
+    item.style.display = visible ? "block" : "none";
+    if (visible) visibleCount++;
+  });
+
+  const notice = document.getElementById("noResultsNotice");
+  notice.classList.toggle("hidden", visibleCount !== 0);
+  notice.classList.toggle("flex", visibleCount === 0);
+}
+
+document.getElementById("corpusSearch").addEventListener("input", filterDocs);
+document.querySelectorAll("#compartmentGroup .filter-chip").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll("#compartmentGroup .filter-chip").forEach(b => {
+      b.classList.remove("bg-inverse-surface", "text-inverse-on-surface", "active");
+      b.classList.add("bg-surface-raised", "text-text-secondary");
+    });
+    btn.classList.remove("bg-surface-raised", "text-text-secondary");
+    btn.classList.add("bg-inverse-surface", "text-inverse-on-surface", "active");
+    filterDocs();
+  });
+});
+document.getElementById("showAllBtn").addEventListener("click", () => {
+  document.getElementById("showAllBtn").classList.add("bg-surface-raised", "text-text-primary", "shadow-sm", "font-medium");
+  document.getElementById("showAllBtn").classList.remove("text-text-secondary");
+  document.getElementById("showAccessibleBtn").classList.remove("bg-surface-raised", "text-text-primary", "shadow-sm", "font-medium");
+  document.getElementById("showAccessibleBtn").classList.add("text-text-secondary");
+  filterDocs();
+});
+document.getElementById("showAccessibleBtn").addEventListener("click", () => {
+  document.getElementById("showAccessibleBtn").classList.add("bg-surface-raised", "text-text-primary", "shadow-sm", "font-medium");
+  document.getElementById("showAccessibleBtn").classList.remove("text-text-secondary");
+  document.getElementById("showAllBtn").classList.remove("bg-surface-raised", "text-text-primary", "shadow-sm", "font-medium");
+  document.getElementById("showAllBtn").classList.add("text-text-secondary");
+  filterDocs();
+});
+
+/* ========================= AUDIT LEDGER ========================= */
+
+const ACTION_COLOR = {
+  ASK_ANSWERED: "compartment-hse", ASK_ABSTAINED: "clearance-secret",
+  GRANT_COMPARTMENT: "clearance-internal", REVOKE_COMPARTMENT: "clearance-confidential",
+  CREATE_USER: "clearance-confidential", SET_GRADE: "clearance-internal",
+  DEACTIVATE_USER: "clearance-secret", REACTIVATE_USER: "compartment-hse",
+  RESET_PASSWORD: "clearance-internal", CHANGE_PASSWORD: "text-secondary",
+};
+
+function summarizeEntry(e) {
+  const d = e.details || {};
+  switch (e.action) {
+    case "ASK_ANSWERED": return `Query answered with ${d.citations_count ?? 0} verified citation(s).`;
+    case "ASK_ABSTAINED": return d.reason === "zero_readable_passages" ? "Query blocked at compartment/clearance gate." : "Query abstained: citation verification failed.";
+    case "GRANT_COMPARTMENT": return `Granted '${d.compartment}' compartment to ${d.subject}.`;
+    case "REVOKE_COMPARTMENT": return `Revoked '${d.compartment}' compartment from ${d.subject}.`;
+    case "CREATE_USER": return `Provisioned account for ${d.subject} (${d.name || ""}), initial grade ${d.grade}.`;
+    case "SET_GRADE": return `Changed ${d.subject}'s pay grade from ${d.old_grade} to ${d.new_grade}.`;
+    case "DEACTIVATE_USER": return `Deactivated account ${d.subject}.`;
+    case "REACTIVATE_USER": return `Reactivated account ${d.subject}.`;
+    case "RESET_PASSWORD": return `Issued new temporary password for ${d.subject}.`;
+    case "CHANGE_PASSWORD": return `${d.subject} updated their own password.`;
+    default: return e.action;
+  }
+}
+
+async function loadLedger() {
+  try {
+    const [entriesRes, verifyRes] = await Promise.all([
+      fetchAPI(`/ledger?limit=${ledgerLimit}`),
+      fetchAPI("/ledger/verify"),
+    ]);
+    const entries = await entriesRes.json();
+    const verify = await verifyRes.json();
+    ledgerLoaded = true;
+    renderLedgerHeader(verify, entries);
+    renderLedgerStream(entries);
+  } catch (err) {
+    console.error("Failed to load ledger:", err);
+  }
+}
+
+function renderLedgerHeader(verify, entries) {
+  const icon = document.getElementById("chainIcon");
+  const statusText = document.getElementById("chainStatusText");
+  if (verify.intact) {
+    icon.textContent = "verified";
+    icon.className = "material-symbols-outlined text-[22px] text-compartment-hse";
+    statusText.textContent = `Chain Integrity: Intact (${verify.total_rows} rows verified)`;
+  } else {
+    icon.textContent = "gpp_bad";
+    icon.className = "material-symbols-outlined text-[22px] text-error";
+    statusText.textContent = `CHAIN BROKEN at row #${verify.broken_at_row_id}`;
+  }
+  document.getElementById("latestHash").textContent = entries.length > 0 ? entries[0].hash : "—";
+  document.getElementById("statHeight").textContent = `#${verify.total_rows}`;
+  document.getElementById("statInferences").textContent = entries.filter(e => e.action === "ASK_ANSWERED" || e.action === "ASK_ABSTAINED").length;
+  document.getElementById("statClearance").textContent = entries.filter(e => ["GRANT_COMPARTMENT", "REVOKE_COMPARTMENT", "SET_GRADE", "CREATE_USER", "DEACTIVATE_USER", "REACTIVATE_USER", "RESET_PASSWORD"].includes(e.action)).length;
+  const breaksEl = document.getElementById("statBreaks");
+  breaksEl.textContent = verify.intact ? "0" : "1";
+  breaksEl.className = `font-headline-sm text-headline-sm ${verify.intact ? "text-text-primary" : "text-clearance-secret"}`;
+}
+
+function renderLedgerStream(entries) {
+  const stream = document.getElementById("ledgerStream");
+  stream.innerHTML = entries.map(e => {
+    const color = ACTION_COLOR[e.action] || "text-secondary";
+    const when = new Date(e.timestamp).toLocaleString();
+    return `
+    <div class="relative flex items-start gap-space-md py-space-md group">
+      <div class="w-10 h-10 rounded-full bg-surface-raised flex items-center justify-center shrink-0 z-10 shadow-sm mt-0.5">
+        <span class="material-symbols-outlined text-compartment-hse text-[18px]">check_circle</span>
+      </div>
+      <div class="flex-1 bg-surface-raised rounded-xl p-space-md shadow-sm flex flex-col gap-space-sm">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-xs">
+          <div class="flex items-center gap-space-xs flex-wrap">
+            <span class="font-label-md text-label-md text-text-primary">Row #${e.row_id}</span>
+            <span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-surface-container text-${color} uppercase tracking-wide">${escapeHtml(e.action)}</span>
+          </div>
+          <span class="font-label-sm text-label-sm text-text-tertiary">${escapeHtml(when)}</span>
+        </div>
+        <div class="flex items-center gap-space-sm text-body-sm font-body-sm">
+          <span class="text-text-tertiary">Actor:</span>
+          <span class="text-text-primary font-medium">${escapeHtml(e.actor)}</span>
+        </div>
+        <p class="font-body-md text-body-md text-text-secondary leading-normal">${escapeHtml(summarizeEntry(e))}</p>
+        <div class="pt-space-xs flex flex-col sm:flex-row sm:items-center justify-between gap-space-xs bg-surface-subtle rounded-lg px-space-sm py-1.5 font-label-sm text-label-sm text-text-tertiary">
+          <div class="flex items-center gap-space-xs truncate"><span>Hash:</span><span class="text-text-primary truncate">${e.hash.substring(0, 10)}...${e.hash.slice(-6)}</span></div>
+          <div class="flex items-center gap-space-xs truncate"><span>Parent:</span><span class="text-text-secondary truncate">${e.prev_hash.substring(0, 10)}...${e.prev_hash.slice(-6)}</span></div>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+document.getElementById("verifyBtn").addEventListener("click", async () => {
+  const btn = document.getElementById("verifyBtn");
+  const icon = document.getElementById("verifyIcon");
+  const text = document.getElementById("verifyBtnText");
+  btn.disabled = true;
+  icon.classList.add("animate-spin");
+  text.textContent = "Verifying…";
+  await loadLedger();
+  icon.classList.remove("animate-spin");
+  text.textContent = "Verify Chain Integrity";
+  btn.disabled = false;
+});
+
+document.getElementById("fetchMoreBtn").addEventListener("click", () => {
+  ledgerLimit += 50;
+  loadLedger();
+});
+
+init();
+</script>
+</body>
+</html>

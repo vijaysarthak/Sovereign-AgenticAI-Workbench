@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>SEVERANCE — Access &amp; Clearance</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<style>@layer base { html, body { margin: 0; padding: 0; } } ::-webkit-scrollbar { display: none; }</style>
+<script src="https://cdn.tailwindcss.com"></script>
+<script id="tailwind-config">
+tailwind.config = { theme: { extend: {
+  "colors": { "secondary": "#436086", "on-secondary-container": "#3c597f", "on-secondary": "#ffffff", "surface-container": "#f0edea", "clearance-internal": "#456E82", "surface-canvas": "#FAF9F5", "text-tertiary": "#8F8D86", "surface-container-highest": "#e5e2de", "inverse-surface": "#31302e", "inverse-on-surface": "#f3f0ed", "compartment-commercial": "#3D6273", "clearance-confidential": "#B07D38", "primary-container": "#c15238", "primary": "#a03a23", "compartment-legal": "#7A5C3E", "surface-raised": "#FFFFFF", "clearance-public": "#6A7B76", "on-surface": "#1c1c1a", "text-primary": "#20201E", "text-secondary": "#666560", "compartment-hse": "#4D7358", "error": "#ba1a1a", "surface-container-lowest": "#ffffff", "on-primary": "#ffffff", "compartment-technical": "#55606B", "clearance-secret": "#A84332", "surface-subtle": "#F3F1EC", "border-subtle": "#E6E4DC", "surface": "#fcf9f5", "compartment-vigilance": "#5C527F" },
+  "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+  "spacing": { "space-xl": "2.5rem", "space-md": "1rem", "space-sm": "0.5rem", "space-xs": "0.25rem", "space-lg": "1.5rem" },
+  "fontFamily": { "headline-lg": ["Newsreader"], "headline-sm": ["Newsreader"], "body-md": ["Inter"], "title-sm": ["Inter"], "label-md": ["JetBrains Mono"], "label-sm": ["JetBrains Mono"], "body-sm": ["Inter"] },
+  "fontSize": {
+    "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.015em", "fontWeight": "400" }],
+    "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "500" }],
+    "body-md": ["15px", { "lineHeight": "26px", "fontWeight": "400" }],
+    "title-sm": ["14px", { "lineHeight": "20px", "fontWeight": "600" }],
+    "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.03em", "fontWeight": "500" }],
+    "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "500" }],
+    "body-sm": ["13px", { "lineHeight": "20px", "fontWeight": "400" }]
+  }
+} } };
+</script>
+</head>
+<body class="bg-surface font-body-md text-body-md text-on-surface min-h-screen">
+
+<header class="fixed top-0 left-0 right-0 z-50 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(32,32,30,0.04)]">
+<div class="h-16 w-full px-space-lg flex items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-lg">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">shield_lock</span></div>
+<div class="flex flex-col leading-none">
+<span class="font-headline-sm text-headline-sm tracking-tight text-text-primary">SEVERANCE</span>
+<span class="font-label-sm text-label-sm text-text-tertiary uppercase tracking-wider">MRPL Enterprise</span>
+</div>
+</div>
+<div class="h-5 w-[1px] bg-border-subtle hidden sm:block"></div>
+<nav class="flex items-center gap-space-xs">
+<a class="px-space-md py-space-xs rounded-lg text-on-surface-variant font-title-sm text-title-sm hover:text-on-surface hover:bg-surface-subtle transition-colors" href="/app">Workbench</a>
+<a class="px-space-md py-space-xs transition-colors bg-surface-subtle text-text-primary font-medium rounded-lg font-title-sm text-title-sm" href="/admin">Access &amp; Clearance</a>
+</nav>
+</div>
+<div class="flex items-center gap-space-md">
+<div class="hidden xl:flex items-center gap-space-sm bg-surface-subtle px-space-md py-space-xs rounded-lg">
+<div class="flex flex-col text-right leading-tight">
+<div class="flex items-center justify-end gap-space-xs">
+<span class="font-title-sm text-title-sm text-text-primary" id="hdrName">—</span>
+<span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-surface text-text-secondary border border-border-subtle" id="hdrGrade">—</span>
+</div>
+<span class="font-body-sm text-body-sm text-text-secondary" id="hdrJobTitle">—</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="font-body-sm text-body-sm text-text-secondary hover:text-text-primary px-space-sm py-space-xs rounded transition-colors" onclick="doLogout()" type="button">Sign Out</button>
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div>
+</div>
+</div>
+</div>
+</header>
+
+<main class="w-full pt-16 bg-surface min-h-screen">
+<div class="w-full max-w-[900px] mx-auto px-space-md py-space-lg">
+
+<div class="flex flex-col gap-space-xs mb-space-xl">
+<div class="flex items-center gap-space-xs text-text-tertiary">
+<span class="font-label-sm text-label-sm uppercase tracking-widest">Enclave Control · Tier 1 Security</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-text-primary tracking-tight">Access &amp; Clearance Architecture</h1>
+<p class="font-body-md text-body-md text-text-secondary max-w-[720px]">
+Governing credential issuance, dual-authority compartment assignment, and personnel access across Mangalore Refinery and Petrochemicals Limited.
+</p>
+</div>
+
+<section class="bg-surface-container rounded-xl p-space-lg space-y-space-md shadow-sm mb-space-xl">
+<div class="flex items-start gap-space-md">
+<div class="w-9 h-9 rounded-lg bg-surface-raised flex items-center justify-center text-primary shrink-0 shadow-sm"><span class="material-symbols-outlined text-[20px]">shield_person</span></div>
+<div class="space-y-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="font-title-sm text-title-sm text-text-primary">Dual-Authority Enforcement Model</span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-primary/10 text-primary uppercase">Mandatory Compliance</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary leading-relaxed">
+Account provisioning and pay-grade assignments are restricted to System Administrators. Compartment sponsorship is an independent, non-delegable authority held solely by the designated officer for that compartment — no one, including administrators, can grant a compartment they don't personally sponsor.
+</p>
+</div>
+</div>
+<div class="pt-space-xs">
+<div class="text-text-secondary mb-space-sm flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-text-tertiary">Active Compartment Sponsorship Authorities</span>
+<span class="font-label-sm text-label-sm text-text-tertiary">Quorum: 5 Appointees</span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-space-xs">
+<div class="bg-surface-raised p-space-sm rounded-lg space-y-space-xs"><span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-compartment-hse/10 text-compartment-hse font-medium">HSE</span><p class="font-label-md text-label-md text-text-primary truncate mt-1">safety-001</p><p class="font-body-sm text-body-sm text-text-secondary text-[12px] truncate">Head of Safety</p></div>
+<div class="bg-surface-raised p-space-sm rounded-lg space-y-space-xs"><span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-compartment-vigilance/10 text-compartment-vigilance font-medium">Vigilance</span><p class="font-label-md text-label-md text-text-primary truncate mt-1">cvo-001</p><p class="font-body-sm text-body-sm text-text-secondary text-[12px] truncate">Chief Vigilance Officer</p></div>
+<div class="bg-surface-raised p-space-sm rounded-lg space-y-space-xs"><span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-compartment-legal/10 text-compartment-legal font-medium">Legal</span><p class="font-label-md text-label-md text-text-primary truncate mt-1">legal-001</p><p class="font-body-sm text-body-sm text-text-secondary text-[12px] truncate">Company Secretary</p></div>
+<div class="bg-surface-raised p-space-sm rounded-lg space-y-space-xs"><span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-compartment-commercial/10 text-compartment-commercial font-medium">Commercial</span><p class="font-label-md text-label-md text-text-primary truncate mt-1">comm-001</p><p class="font-body-sm text-body-sm text-text-secondary text-[12px] truncate">GM Commercial</p></div>
+<div class="bg-surface-raised p-space-sm rounded-lg space-y-space-xs"><span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-compartment-technical/10 text-compartment-technical font-medium">Technical</span><p class="font-label-md text-label-md text-text-primary truncate mt-1">tech-001</p><p class="font-body-sm text-body-sm text-text-secondary text-[12px] truncate">GM Technical</p></div>
+</div>
+</div>
+</section>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-lg mb-space-xl">
+<!-- PANEL 1: Admin Account Provisioning -->
+<div class="bg-surface-raised p-space-lg rounded-xl shadow-sm flex flex-col justify-between" id="adminPanel" style="display:none;">
+<div>
+<div class="space-y-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-text-tertiary uppercase tracking-wider">Authentication Subsystem</span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 bg-surface-subtle text-text-secondary rounded">SysAdmin Only</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-text-primary">Provision New Employee</h2>
+<p class="font-body-sm text-body-sm text-text-secondary">Notice: There are no compartment checkboxes here — admins cannot grant compartments.</p>
+</div>
+<div class="p-space-xs bg-surface-subtle rounded-lg flex items-center gap-1 border border-border-subtle mb-space-sm mt-space-md">
+<button class="flex-1 py-1 px-2 rounded font-title-sm text-[12px] bg-surface-raised text-text-primary shadow-sm transition-colors text-center" id="tabProvision" type="button">Provision Employee</button>
+<button class="flex-1 py-1 px-2 rounded font-title-sm text-[12px] text-text-secondary hover:text-text-primary transition-colors text-center" id="tabReset" type="button">Reset Password</button>
+</div>
+
+<form class="space-y-space-sm hidden" id="resetForm">
+<div class="space-y-1">
+<label class="font-label-sm text-label-sm text-text-secondary uppercase">Target Employee ID</label>
+<input class="w-full h-[38px] px-3 bg-surface-subtle focus:bg-surface rounded-lg font-label-md text-label-md text-text-primary outline-none focus:shadow-[0_0_0_1px_rgba(32,32,30,0.3)] transition-all" id="resetEmpId" placeholder="e.g. emp-105" required type="text">
+</div>
+<div class="pt-space-xs">
+<button class="w-full h-[40px] bg-secondary hover:bg-on-secondary-container text-on-secondary font-title-sm text-title-sm rounded-lg flex items-center justify-center gap-space-xs transition-colors shadow-sm cursor-pointer" type="submit">
+<span class="material-symbols-outlined text-[18px]">key</span><span>Issue New Temporary Password</span>
+</button>
+</div>
+</form>
+
+<form class="space-y-space-sm" id="provisionForm">
+<div class="space-y-1">
+<label class="font-label-sm text-label-sm text-text-secondary uppercase">Employee ID</label>
+<input class="w-full h-[38px] px-3 bg-surface-subtle focus:bg-surface rounded-lg font-label-md text-label-md text-text-primary outline-none focus:shadow-[0_0_0_1px_rgba(32,32,30,0.3)] transition-all" id="provId" placeholder="e.g. emp-105" required type="text">
+</div>
+<div class="space-y-1">
+<label class="font-label-sm text-label-sm text-text-secondary uppercase">Full Name</label>
+<input class="w-full h-[38px] px-3 bg-surface-subtle focus:bg-surface rounded-lg font-body-md text-body-md text-text-primary outline-none focus:shadow-[0_0_0_1px_rgba(32,32,30,0.3)] transition-all" id="provName" placeholder="e.g. Sunita Hegde" required type="text">
+</div>
+<div class="space-y-1">
+<label class="font-label-sm text-label-sm text-text-secondary uppercase">Designation / Role Title</label>
+<input class="w-full h-[38px] px-3 bg-surface-subtle focus:bg-surface rounded-lg font-body-md text-body-md text-text-primary outline-none focus:shadow-[0_0_0_1px_rgba(32,32,30,0.3)] transition-all" id="provRole" placeholder="e.g. Deputy Manager (Refinery)" required type="text">
+</div>
+<div class="space-y-1">
+<label class="font-label-sm text-label-sm text-text-secondary uppercase">Authorized Pay Grade</label>
+<select class="w-full h-[38px] px-3 bg-surface-subtle focus:bg-surface rounded-lg font-body-md text-body-md text-text-primary outline-none focus:shadow-[0_0_0_1px_rgba(32,32,30,0.3)] transition-all cursor-pointer" id="provGrade">
+<optgroup label="Management Officers">
+<option value="A">Grade A — Executive / Assistant Manager (Rank 7)</option>
+<option value="B">Grade B — Manager (Rank 8)</option>
+<option value="C">Grade C — Senior Manager (Rank 9)</option>
+<option value="D">Grade D — Chief Manager (Rank 10)</option>
+<option value="E">Grade E — Deputy General Manager (Rank 11)</option>
+<option value="F">Grade F — General Manager (Rank 12)</option>
+<option value="G">Grade G — Group General Manager (Rank 13)</option>
+<option value="H">Grade H — Executive Director (Rank 14)</option>
+<option value="I">Grade I — Director / C&amp;MD (Rank 15)</option>
+</optgroup>
+<optgroup label="Junior Management">
+<option value="JM1">JM1 (Rank 4)</option>
+<option value="JM2">JM2 (Rank 5)</option>
+<option value="JM3">JM3 (Rank 6)</option>
+</optgroup>
+<optgroup label="Non-Management Support &amp; Staff">
+<option value="S1">S1 (Rank 1)</option>
+<option value="S2">S2 (Rank 2)</option>
+<option value="S3">S3 (Rank 3)</option>
+<option value="S4">S4 (Rank 4)</option>
+<option value="TS1">TS1 (Rank 1)</option>
+<option value="TS2">TS2 (Rank 2)</option>
+</optgroup>
+</select>
+</div>
+<div class="pt-space-xs">
+<button class="w-full h-[40px] bg-primary hover:bg-primary-container text-on-primary font-title-sm text-title-sm rounded-lg flex items-center justify-center gap-space-xs transition-colors shadow-sm cursor-pointer" type="submit">
+<span class="material-symbols-outlined text-[18px]">person_add</span><span>Provision Account</span>
+</button>
+</div>
+</form>
+<div class="mt-space-md p-space-sm bg-surface-subtle rounded-lg flex-col gap-space-xs hidden" id="provisionReveal">
+<span class="font-label-sm text-label-sm text-primary uppercase font-medium flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">lock_reset</span>Credentials Issued (Shown Once)</span>
+<p class="font-body-sm text-body-sm text-text-primary" id="revealTarget"></p>
+<div class="flex items-center justify-between bg-surface-raised p-2 rounded mt-1">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-text-tertiary uppercase text-[10px]">Temporary Password</span>
+<code class="font-label-md text-label-md text-text-primary select-all" id="revealPassword"></code>
+</div>
+<button class="p-1.5 hover:bg-surface-subtle rounded text-text-secondary hover:text-text-primary transition-colors" id="copyRevealBtn" title="Copy" type="button"><span class="material-symbols-outlined text-[16px]">content_copy</span></button>
+</div>
+<p class="font-label-sm text-label-sm text-text-secondary text-[11px] leading-snug mt-1">This value will not be shown again. The account must set its own password on next login.</p>
+</div>
+</div>
+</div>
+
+<!-- PANEL 2: Sponsor Compartment Controls -->
+<div class="bg-surface-raised p-space-lg rounded-xl shadow-sm flex flex-col justify-between" id="sponsorPanel" style="display:none;">
+<div>
+<div class="space-y-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-text-tertiary uppercase tracking-wider">Delegated Security</span>
+<div class="flex items-center gap-1" id="sponsorListBadge"></div>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-text-primary">Compartment Clearance</h2>
+<p class="font-body-sm text-body-sm text-text-secondary">Grant or revoke clearance within compartments you personally sponsor. You cannot grant to yourself.</p>
+</div>
+<form class="mt-space-md space-y-space-sm" id="grantForm">
+<div class="space-y-1">
+<label class="font-label-sm text-label-sm text-text-secondary uppercase">Target Employee ID</label>
+<input class="w-full h-[38px] px-3 bg-surface-subtle focus:bg-surface rounded-lg font-label-md text-label-md text-text-primary outline-none focus:shadow-[0_0_0_1px_rgba(32,32,30,0.3)] transition-all" id="targetPersonId" placeholder="e.g. emp-105" required type="text">
+</div>
+<div class="space-y-1">
+<label class="font-label-sm text-label-sm text-text-secondary uppercase">Compartment to Grant</label>
+<select class="w-full h-[38px] px-3 bg-surface-subtle focus:bg-surface rounded-lg font-body-md text-body-md text-text-primary outline-none focus:shadow-[0_0_0_1px_rgba(32,32,30,0.3)] transition-all cursor-pointer" id="sponsoredCompSelect"></select>
+</div>
+<div class="pt-space-xs flex items-center gap-space-sm">
+<button class="flex-1 h-[40px] bg-secondary hover:bg-on-secondary-container text-on-secondary font-title-sm text-title-sm rounded-lg flex items-center justify-center gap-space-xs transition-colors shadow-sm cursor-pointer" id="grantBtn" type="button">
+<span class="material-symbols-outlined text-[18px]">verified_user</span><span>Grant Clearance</span>
+</button>
+<button class="h-[40px] px-4 bg-surface-subtle hover:bg-surface-container-highest text-error font-title-sm text-title-sm rounded-lg flex items-center justify-center gap-space-xs transition-colors cursor-pointer" id="revokeBtn" type="button">
+<span class="material-symbols-outlined text-[18px]">gpp_bad</span><span>Revoke</span>
+</button>
+</div>
+</form>
+</div>
+</div>
+</div>
+
+<section class="space-y-space-md">
+<div class="flex flex-col sm:flex-row sm:items-end justify-between gap-space-sm">
+<div>
+<span class="font-label-sm text-label-sm text-text-tertiary uppercase tracking-wider" id="directoryCount">Refinery Directory</span>
+<h2 class="font-headline-sm text-headline-sm text-text-primary">Accounts &amp; Clearance Registry</h2>
+</div>
+<div class="flex items-center gap-space-sm">
+<div class="relative">
+<input class="h-[34px] pl-8 pr-3 bg-surface-raised rounded-lg font-body-sm text-body-sm text-text-primary outline-none shadow-sm focus:shadow-[0_0_0_1px_rgba(32,32,30,0.3)] transition-all" id="searchDirectory" placeholder="Filter by ID, name, grade…" type="text">
+<span class="material-symbols-outlined absolute left-2.5 top-2 text-text-tertiary text-[16px]">search</span>
+</div>
+<button class="h-[34px] px-3 bg-surface-raised hover:bg-surface-subtle text-text-primary font-title-sm text-title-sm rounded-lg flex items-center gap-1 shadow-sm transition-colors cursor-pointer" id="exportBtn" type="button">
+<span class="material-symbols-outlined text-[16px]">download</span><span class="hidden sm:inline">Export</span>
+</button>
+<button class="h-[34px] px-3 bg-surface-raised hover:bg-surface-subtle text-text-primary font-title-sm text-title-sm rounded-lg flex items-center gap-1 shadow-sm transition-colors cursor-pointer" id="refreshBtn" type="button">
+<span class="material-symbols-outlined text-[16px]">refresh</span>
+</button>
+</div>
+</div>
+<div class="bg-surface-raised rounded-xl shadow-sm overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left" id="directoryTable">
+<thead>
+<tr class="bg-surface-subtle text-text-secondary">
+<th class="py-3 px-4 font-label-sm text-label-sm uppercase tracking-wider">Employee ID</th>
+<th class="py-3 px-4 font-label-sm text-label-sm uppercase tracking-wider">Name &amp; Role</th>
+<th class="py-3 px-4 font-label-sm text-label-sm uppercase tracking-wider">Pay Grade</th>
+<th class="py-3 px-4 font-label-sm text-label-sm uppercase tracking-wider">Compartments</th>
+<th class="py-3 px-4 font-label-sm text-label-sm uppercase tracking-wider">State</th>
+<th class="py-3 px-4 font-label-sm text-label-sm uppercase tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody id="directoryBody"><tr><td class="py-3 px-4 text-text-secondary" colspan="6">Loading accounts…</td></tr></tbody>
+</table>
+</div>
+</div>
+</section>
+
+<div class="p-space-md bg-surface-container rounded-xl flex flex-col sm:flex-row items-center justify-between gap-space-md text-text-secondary mt-space-lg mb-space-xl">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-text-tertiary text-[22px]">policy</span>
+<div class="space-y-0.5">
+<p class="font-title-sm text-title-sm text-text-primary leading-none">Statutory Ledger Integrity</p>
+<p class="font-body-sm text-body-sm text-text-secondary text-[12px]">All account and clearance operations are written to the hash-chained audit ledger — see Workbench &gt; Audit Ledger.</p>
+</div>
+</div>
+</div>
+
+</div>
+</main>
+
+<div class="fixed bottom-6 right-6 z-50 transform transition-all duration-300 pointer-events-none bg-inverse-surface text-inverse-on-surface px-4 py-3 rounded-lg shadow-xl flex items-center gap-3 translate-y-20 opacity-0" id="toast">
+<span class="material-symbols-outlined text-[20px] text-compartment-hse" id="toastIcon">check_circle</span>
+<span class="font-body-sm text-body-sm" id="toastMessage"></span>
+</div>
+
+<script src="/static/app.js"></script>
+<script>
+const GRADES = ["A","B","C","D","E","F","G","H","I","JM1","JM2","JM3","S1","S2","S3","S4","TS1","TS2"];
+const COMP_COLOR = { hse: "compartment-hse", vigilance: "compartment-vigilance", legal: "compartment-legal", commercial: "compartment-commercial", technical: "compartment-technical" };
+
+let currentPrincipal = null;
+let mySponsoredCompartments = [];
+let allUsers = [];
+
+function showToast(message, isError = false) {
+  const toast = document.getElementById("toast");
+  const msg = document.getElementById("toastMessage");
+  const icon = document.getElementById("toastIcon");
+  msg.textContent = message;
+  icon.textContent = isError ? "error" : "check_circle";
+  icon.className = `material-symbols-outlined text-[20px] ${isError ? "text-error" : "text-compartment-hse"}`;
+  toast.classList.remove("translate-y-20", "opacity-0");
+  toast.classList.add("translate-y-0", "opacity-100");
+  setTimeout(() => {
+    toast.classList.remove("translate-y-0", "opacity-100");
+    toast.classList.add("translate-y-20", "opacity-0");
+  }, 3500);
+}
+
+async function init() {
+  currentPrincipal = await getCurrentPrincipal();
+  if (!currentPrincipal) return;
+
+  document.getElementById("hdrName").textContent = currentPrincipal.name;
+  document.getElementById("hdrGrade").textContent = `Grade ${currentPrincipal.grade}`;
+  document.getElementById("hdrJobTitle").textContent = currentPrincipal.job_title;
+
+  const grantsRes = await fetchAPI("/grants/mine");
+  if (grantsRes.ok) {
+    const data = await grantsRes.json();
+    mySponsoredCompartments = data.sponsored_compartments || [];
+  }
+
+  if (currentPrincipal.is_admin) {
+    document.getElementById("adminPanel").style.display = "flex";
+  }
+
+  if (mySponsoredCompartments.length > 0) {
+    document.getElementById("sponsorPanel").style.display = "flex";
+    const select = document.getElementById("sponsoredCompSelect");
+    select.innerHTML = mySponsoredCompartments.map(c => `<option value="${c}">${c.toUpperCase()}</option>`).join("");
+    document.getElementById("sponsorListBadge").innerHTML = mySponsoredCompartments.map(
+      c => `<span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-${COMP_COLOR[c]}/10 text-${COMP_COLOR[c]} uppercase font-medium">${c}</span>`
+    ).join(" ");
+  }
+
+  loadUsers();
+}
+
+async function loadUsers() {
+  const tbody = document.getElementById("directoryBody");
+  try {
+    if (currentPrincipal.is_admin) {
+      const res = await fetchAPI("/admin/users");
+      allUsers = await res.json();
+    } else {
+      allUsers = [currentPrincipal];
+    }
+    document.getElementById("directoryCount").textContent =
+      `Refinery Directory — ${allUsers.length} Account${allUsers.length === 1 ? "" : "s"}`;
+    renderUsers();
+  } catch (err) {
+    tbody.innerHTML = `<tr><td class="py-3 px-4 text-error" colspan="6">${err.message}</td></tr>`;
+  }
+}
+
+function gradeSelectHtml(u) {
+  if (!currentPrincipal.is_admin || u.person_id === currentPrincipal.person_id || u.is_active === false) {
+    return `<select class="h-7 px-2 bg-surface-container text-text-tertiary rounded font-label-sm text-label-sm cursor-not-allowed opacity-75" disabled><option>${u.grade}</option></select>`;
+  }
+  return `<select class="h-7 px-2 bg-surface-subtle hover:bg-surface text-text-primary rounded font-label-sm text-label-sm outline-none cursor-pointer" onchange="updateGrade('${u.person_id}', this.value)">
+    ${GRADES.map(g => `<option value="${g}" ${u.grade === g ? "selected" : ""}>${g}</option>`).join("")}
+  </select>`;
+}
+
+function renderUsers() {
+  const q = (document.getElementById("searchDirectory").value || "").toLowerCase();
+  const tbody = document.getElementById("directoryBody");
+  const rows = allUsers.filter(u => JSON.stringify(u).toLowerCase().includes(q));
+
+  tbody.innerHTML = rows.map(u => {
+    const isSelf = u.person_id === currentPrincipal.person_id;
+    const isActive = u.is_active !== false;
+    const comps = (u.compartments || []).map(c => `<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-full bg-${COMP_COLOR[c] || "text-secondary"}/10 text-${COMP_COLOR[c] || "text-secondary"} uppercase font-medium">${escapeHtml(c)}</span>`).join(" ") || `<span class="font-label-sm text-label-sm text-text-tertiary">none</span>`;
+
+    const statusPill = isActive
+      ? `<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-full bg-compartment-hse/15 text-compartment-hse font-medium">Active</span>`
+      : `<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-full bg-surface-container-highest text-text-tertiary font-medium">Inactive</span>`;
+
+    let actions = `<span class="font-body-sm text-body-sm text-text-secondary">View Only</span>`;
+    if (currentPrincipal.is_admin) {
+      if (isSelf) {
+        actions = `<span class="font-label-sm text-label-sm text-text-tertiary">Self-modification blocked</span>`;
+      } else if (!isActive) {
+        actions = `<button class="h-7 px-2.5 bg-surface-subtle hover:bg-surface-container-highest text-compartment-hse rounded font-label-sm text-label-sm transition-colors cursor-pointer" onclick="reactivateUser('${u.person_id}')" type="button">Reactivate</button>`;
+      } else {
+        actions = `
+          <div class="flex items-center justify-end gap-1.5">
+            <button aria-label="Reset Password" class="w-7 h-7 bg-surface-subtle hover:bg-surface-container-highest text-text-secondary hover:text-text-primary rounded flex items-center justify-center cursor-pointer" onclick="resetPassword('${u.person_id}')" title="Reset Password" type="button"><span class="material-symbols-outlined text-[16px]">lock_reset</span></button>
+            <button aria-label="Deactivate" class="w-7 h-7 bg-surface-subtle hover:bg-surface-container-highest text-text-secondary hover:text-error rounded flex items-center justify-center cursor-pointer" onclick="deactivateUser('${u.person_id}')" title="Deactivate Account" type="button"><span class="material-symbols-outlined text-[16px]">person_off</span></button>
+          </div>`;
+      }
+    }
+
+    return `
+    <tr class="hover:bg-surface-subtle/50 transition-colors ${!isActive ? "opacity-60" : ""}">
+      <td class="py-3 px-4"><div class="flex items-center gap-1.5"><code class="font-label-sm text-label-sm text-text-primary">${escapeHtml(u.person_id)}</code>${isSelf ? '<span class="font-label-sm text-label-sm px-1 rounded bg-secondary/10 text-secondary text-[10px]">YOU</span>' : ""}</div></td>
+      <td class="py-3 px-4"><p class="font-title-sm text-title-sm text-text-primary">${escapeHtml(u.name)}</p><p class="font-body-sm text-body-sm text-text-secondary text-[12px]">${escapeHtml(u.job_title)}</p></td>
+      <td class="py-3 px-4">${gradeSelectHtml(u)}</td>
+      <td class="py-3 px-4"><div class="flex flex-wrap gap-1">${comps}</div></td>
+      <td class="py-3 px-4">${statusPill}</td>
+      <td class="py-3 px-4 text-right">${actions}</td>
+    </tr>`;
+  }).join("") || `<tr><td class="py-3 px-4 text-text-secondary" colspan="6">No accounts match.</td></tr>`;
+}
+
+document.getElementById("searchDirectory").addEventListener("input", renderUsers);
+document.getElementById("refreshBtn").addEventListener("click", loadUsers);
+document.getElementById("exportBtn").addEventListener("click", () => {
+  const blob = new Blob([JSON.stringify(allUsers, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "severance_accounts_export.json";
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast("Exported current directory view as JSON.");
+});
+
+async function updateGrade(target_id, new_grade) {
+  if (!confirm(`Change grade of ${target_id} to ${new_grade}?`)) { loadUsers(); return; }
+  try {
+    const res = await fetchAPI(`/admin/users/${target_id}/grade`, { method: "PATCH", body: JSON.stringify({ grade: new_grade }) });
+    const data = await res.json();
+    if (!res.ok) { showToast(data.detail || "Failed to update grade.", true); loadUsers(); return; }
+    showToast(`Updated ${target_id}'s pay grade to ${new_grade}.`);
+    loadUsers();
+  } catch (err) { showToast(err.message, true); loadUsers(); }
+}
+
+async function deactivateUser(target_id) {
+  if (!confirm(`Deactivate account ${target_id}? They will no longer be able to authenticate.`)) return;
+  try {
+    const res = await fetchAPI(`/admin/users/${target_id}/deactivate`, { method: "POST" });
+    const data = await res.json();
+    if (!res.ok) { showToast(data.detail || "Failed to deactivate.", true); return; }
+    showToast(`Account ${target_id} deactivated.`);
+    loadUsers();
+  } catch (err) { showToast(err.message, true); }
+}
+
+async function reactivateUser(target_id) {
+  if (!confirm(`Reactivate account ${target_id}?`)) return;
+  try {
+    const res = await fetchAPI(`/admin/users/${target_id}/reactivate`, { method: "POST" });
+    const data = await res.json();
+    if (!res.ok) { showToast(data.detail || "Failed to reactivate.", true); return; }
+    showToast(`Account ${target_id} reactivated.`);
+    loadUsers();
+  } catch (err) { showToast(err.message, true); }
+}
+
+async function resetPassword(target_id) {
+  if (!confirm(`Reset password for ${target_id}? Their current password stops working immediately.`)) return;
+  try {
+    const res = await fetchAPI(`/admin/users/${target_id}/reset-password`, { method: "POST" });
+    const data = await res.json();
+    if (!res.ok) { showToast(data.detail || "Failed to reset password.", true); return; }
+    revealCredentials(`${target_id} [password reset]`, data.temporary_password);
+    showToast(`Issued new temporary password for ${target_id}.`);
+  } catch (err) { showToast(err.message, true); }
+}
+
+function revealCredentials(targetLabel, password) {
+  document.getElementById("revealTarget").textContent = targetLabel;
+  document.getElementById("revealPassword").textContent = password;
+  const box = document.getElementById("provisionReveal");
+  box.classList.remove("hidden");
+  box.classList.add("flex");
+  box.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+document.getElementById("copyRevealBtn").addEventListener("click", () => {
+  navigator.clipboard.writeText(document.getElementById("revealPassword").textContent).then(() => showToast("Password copied to clipboard."));
+});
+
+function switchAuthTab(tab) {
+  const pForm = document.getElementById("provisionForm");
+  const rForm = document.getElementById("resetForm");
+  const tabP = document.getElementById("tabProvision");
+  const tabR = document.getElementById("tabReset");
+  if (tab === "provision") {
+    pForm.classList.remove("hidden"); rForm.classList.add("hidden");
+    tabP.className = "flex-1 py-1 px-2 rounded font-title-sm text-[12px] bg-surface-raised text-text-primary shadow-sm transition-colors text-center";
+    tabR.className = "flex-1 py-1 px-2 rounded font-title-sm text-[12px] text-text-secondary hover:text-text-primary transition-colors text-center";
+  } else {
+    pForm.classList.add("hidden"); rForm.classList.remove("hidden");
+    tabR.className = "flex-1 py-1 px-2 rounded font-title-sm text-[12px] bg-surface-raised text-text-primary shadow-sm transition-colors text-center";
+    tabP.className = "flex-1 py-1 px-2 rounded font-title-sm text-[12px] text-text-secondary hover:text-text-primary transition-colors text-center";
+  }
+}
+document.getElementById("tabProvision").addEventListener("click", () => switchAuthTab("provision"));
+document.getElementById("tabReset").addEventListener("click", () => switchAuthTab("reset"));
+
+document.getElementById("resetForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  await resetPassword(document.getElementById("resetEmpId").value.trim());
+});
+
+document.getElementById("provisionForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const person_id = document.getElementById("provId").value.trim();
+  const name = document.getElementById("provName").value.trim();
+  const job_title = document.getElementById("provRole").value.trim();
+  const grade = document.getElementById("provGrade").value;
+
+  try {
+    const res = await fetchAPI("/admin/users", { method: "POST", body: JSON.stringify({ person_id, name, job_title, grade }) });
+    const data = await res.json();
+    if (!res.ok) { showToast(data.detail || "Failed to provision user.", true); return; }
+    revealCredentials(`${data.user.person_id} (${data.user.name})`, data.temporary_password);
+    document.getElementById("provisionForm").reset();
+    showToast(`Account ${person_id} provisioned.`);
+    loadUsers();
+  } catch (err) { showToast(err.message, true); }
+});
+
+async function executeGrant(action) {
+  const person_id = document.getElementById("targetPersonId").value.trim();
+  const compartment = document.getElementById("sponsoredCompSelect").value;
+  if (!person_id) { showToast("Please specify a target Employee ID.", true); return; }
+
+  const method = action === "GRANT" ? "POST" : "DELETE";
+  try {
+    const res = await fetchAPI("/grants", { method, body: JSON.stringify({ person_id, compartment }) });
+    const data = await res.json();
+    if (!res.ok) { showToast(data.detail || `Failed to ${action.toLowerCase()} compartment.`, true); return; }
+    showToast(`${action === "GRANT" ? "Granted" : "Revoked"} ${compartment} ${action === "GRANT" ? "to" : "from"} ${person_id}.`);
+    loadUsers();
+  } catch (err) { showToast(err.message, true); }
+}
+document.getElementById("grantBtn").addEventListener("click", () => executeGrant("GRANT"));
+document.getElementById("revokeBtn").addEventListener("click", () => executeGrant("REVOKE"));
+
+init();
+</script>
+</body>
+</html>

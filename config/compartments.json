@@ -1,0 +1,7 @@
+{
+  "vigilance":  {"sponsor": "cvo-001",    "description": "Chief Vigilance Officer"},
+  "hse":        {"sponsor": "safety-001", "description": "Head of Safety"},
+  "legal":      {"sponsor": "legal-001",  "description": "Company Secretary"},
+  "commercial": {"sponsor": "comm-001",   "description": "GM Commercial"},
+  "technical":  {"sponsor": "tech-001",   "description": "GM Technical"}
+}

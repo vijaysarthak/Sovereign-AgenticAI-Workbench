@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #2a2a2a #0a0a0a;
+}
+*::-webkit-scrollbar { width: 6px; height: 6px; }
+*::-webkit-scrollbar-track { background: #0a0a0a; }
+*::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 3px; }
+*::-webkit-scrollbar-thumb:hover { background: #3a3a3a; }
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@layer utilities {
+  .text-gradient-orange {
+    @apply bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent;
+  }
+}
+
+/* NDJSON streaming animation */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+.animate-pulse-dot {
+  animation: pulse-dot 1.5s ease-in-out infinite;
+}
+
+/* Markdown rendering styles */
+.markdown-body h1 { font-size: 1.25rem; font-weight: 700; margin: 1rem 0 0.5rem; color: #f5f5f5; }
+.markdown-body h2 { font-size: 1.1rem; font-weight: 600; margin: 0.8rem 0 0.4rem; color: #f5f5f5; }
+.markdown-body h3 { font-size: 1rem; font-weight: 600; margin: 0.6rem 0 0.3rem; color: #f5f5f5; }
+.markdown-body p { margin: 0 0 0.6rem; line-height: 1.6; }
+.markdown-body ul, .markdown-body ol { margin: 0 0 0.6rem; padding-left: 1.5rem; }
+.markdown-body li { margin-bottom: 0.2rem; }
+.markdown-body strong { color: #ffffff; font-weight: 600; }
+.markdown-body code {
+  background: #1e1e1e;
+  border: 1px solid #2a2a2a;
+  border-radius: 4px;
+  padding: 0.1rem 0.35rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85em;
+}
+.markdown-body pre {
+  background: #111111;
+  border: 1px solid #1e1e1e;
+  border-radius: 6px;
+  padding: 0.75rem;
+  overflow-x: auto;
+  margin: 0.5rem 0;
+}
+.markdown-body pre code {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+.markdown-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.5rem 0;
+}
+.markdown-body th, .markdown-body td {
+  border: 1px solid #2a2a2a;
+  padding: 0.4rem 0.6rem;
+  text-align: left;
+  font-size: 0.85rem;
+}
+.markdown-body th {
+  background: #141414;
+  color: #888;
+  font-weight: 600;
+}

@@ -1,0 +1,48 @@
+[
+  {
+    "doc_id": "mrpl-hse-sop-101",
+    "file": "mrpl-hse-sop-101.pdf",
+    "title": "MRPL Health, Safety & Environment: Refinery Emergency Response Manual",
+    "source": "MRPL HSE Operational Standards (Confidential Internal Document)",
+    "label": {
+      "tier": "confidential",
+      "compartments": [
+        "hse"
+      ]
+    }
+  },
+  {
+    "doc_id": "mrpl-vig-proc-2025",
+    "file": "mrpl-vig-proc-2025.pdf",
+    "title": "MRPL Vigilance Investigation: Annual Procurement Audit Findings Q2 2025",
+    "source": "MRPL Chief Vigilance Officer Disclosures (Confidential Internal Document)",
+    "label": {
+      "tier": "confidential",
+      "compartments": [
+        "vigilance"
+      ]
+    }
+  },
+  {
+    "doc_id": "mrpl-rti-manual-sec4",
+    "file": "mrpl-rti-manual-sec4.pdf",
+    "title": "MRPL Right to Information Act 2005: Section 4 Proactive Disclosures Manual",
+    "source": "MRPL Public RTI Disclosures Portal (Public Record)",
+    "label": {
+      "tier": "public",
+      "compartments": []
+    }
+  },
+  {
+    "doc_id": "emergency_rulebook",
+    "file": "emergency_rulebook.pdf",
+    "title": "Emergency Rulebook",
+    "source": "Auto-Discovered Document (Internal)",
+    "label": {
+      "tier": "internal",
+      "compartments": [
+        "hse"
+      ]
+    }
+  }
+]

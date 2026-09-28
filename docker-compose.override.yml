@@ -1,0 +1,16 @@
+# Local demo: give the ollama container the NVIDIA GPU so drafting doesn't time out on CPU.
+services:
+  ollama:
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+  api:
+    environment:
+      # 4 GB GPU: gemma3:4b only partly fits and model swaps exceed the 60s timeout.
+      OLLAMA_MODEL: "gemma3:4b"
+      OLLAMA_FALLBACK_MODEL: "qwen3.5:2b-q4_K_M"
+      SEVERANCE_RETRIEVAL_MODE: "lexical"
